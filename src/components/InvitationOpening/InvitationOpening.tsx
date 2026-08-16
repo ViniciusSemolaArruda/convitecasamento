@@ -4,32 +4,70 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronDown } from "lucide-react";
-import { useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 
 import styles from "./InvitationOpening.module.css";
 
-gsap.registerPlugin(
-  ScrollTrigger,
-  useGSAP,
-);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export default function InvitationOpening() {
-  const sectionRef =
-    useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const scrollReleasedRef = useRef(false);
 
-  const stickyRef =
-    useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
 
-  const sceneRef =
-    useRef<HTMLDivElement>(null);
+    const previousHtmlOverflow = html.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
+    const previousScrollBehavior = html.style.scrollBehavior;
+
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    ScrollTrigger.clearScrollMemory("manual");
+
+    html.style.scrollBehavior = "auto";
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+
+    const resetScroll = () => {
+      window.scrollTo(0, 0);
+    };
+
+    resetScroll();
+
+    const frame = window.requestAnimationFrame(() => {
+      resetScroll();
+
+      window.requestAnimationFrame(resetScroll);
+    });
+
+    const delayedReset = window.setTimeout(resetScroll, 120);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(delayedReset);
+
+      if (!scrollReleasedRef.current) {
+        html.style.overflow = previousHtmlOverflow;
+        body.style.overflow = previousBodyOverflow;
+      }
+
+      html.style.scrollBehavior = previousScrollBehavior;
+    };
+  }, []);
 
   useGSAP(
     () => {
-      if (
-        !sectionRef.current ||
-        !stickyRef.current ||
-        !sceneRef.current
-      ) {
+      const section = sectionRef.current;
+      const sticky = stickyRef.current;
+      const scene = sceneRef.current;
+
+      if (!section || !sticky || !scene) {
         return;
       }
 
@@ -68,13 +106,10 @@ export default function InvitationOpening() {
         rotate: -15,
       });
 
-      gsap.set(
-        `.${styles.decorativeLine}`,
-        {
-          opacity: 0,
-          scaleX: 0.35,
-        },
-      );
+      gsap.set(`.${styles.decorativeLine}`, {
+        opacity: 0,
+        scaleX: 0.35,
+      });
 
       gsap.set(`.${styles.bottomMessage}`, {
         opacity: 0,
@@ -90,21 +125,17 @@ export default function InvitationOpening() {
         defaults: {
           ease: "none",
         },
-
         scrollTrigger: {
-          trigger: sectionRef.current,
+          id: "invitation-opening",
+          trigger: section,
           start: "top top",
-
-          end: () =>
-            `+=${window.innerHeight * 5}`,
-
+          end: () => `+=${window.innerHeight * 5}`,
           scrub: 1.15,
-
-          pin: stickyRef.current,
+          pin: sticky,
           pinSpacing: true,
-
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          fastScrollEnd: false,
         },
       });
 
@@ -118,7 +149,6 @@ export default function InvitationOpening() {
           },
           0,
         )
-
         .to(
           `.${styles.progressLine}`,
           {
@@ -127,9 +157,8 @@ export default function InvitationOpening() {
           },
           0,
         )
-
         .to(
-          sceneRef.current,
+          scene,
           {
             scale: 1.015,
             duration: 0.9,
@@ -137,7 +166,6 @@ export default function InvitationOpening() {
           },
           0,
         )
-
         .to(
           `.${styles.leftDoor}`,
           {
@@ -148,7 +176,6 @@ export default function InvitationOpening() {
           },
           0.75,
         )
-
         .to(
           `.${styles.rightDoor}`,
           {
@@ -159,7 +186,6 @@ export default function InvitationOpening() {
           },
           0.75,
         )
-
         .to(
           `.${styles.leftShadow}`,
           {
@@ -168,7 +194,6 @@ export default function InvitationOpening() {
           },
           0.75,
         )
-
         .to(
           `.${styles.rightShadow}`,
           {
@@ -177,7 +202,6 @@ export default function InvitationOpening() {
           },
           0.75,
         )
-
         .to(
           [
             `.${styles.leftDoor}`,
@@ -189,7 +213,6 @@ export default function InvitationOpening() {
           },
           2.8,
         )
-
         .to(
           `.${styles.openInvitation}`,
           {
@@ -199,7 +222,6 @@ export default function InvitationOpening() {
           },
           1.85,
         )
-
         .to(
           `.${styles.namesContent}`,
           {
@@ -211,7 +233,6 @@ export default function InvitationOpening() {
           },
           2.65,
         )
-
         .to(
           `.${styles.subtitle}`,
           {
@@ -222,7 +243,6 @@ export default function InvitationOpening() {
           },
           2.85,
         )
-
         .to(
           `.${styles.firstName}`,
           {
@@ -233,7 +253,6 @@ export default function InvitationOpening() {
           },
           3.1,
         )
-
         .to(
           `.${styles.ampersand}`,
           {
@@ -245,7 +264,6 @@ export default function InvitationOpening() {
           },
           3.45,
         )
-
         .to(
           `.${styles.secondName}`,
           {
@@ -256,7 +274,6 @@ export default function InvitationOpening() {
           },
           3.7,
         )
-
         .to(
           `.${styles.decorativeLine}`,
           {
@@ -267,7 +284,6 @@ export default function InvitationOpening() {
           },
           4.05,
         )
-
         .to(
           `.${styles.bottomMessage}`,
           {
@@ -279,149 +295,92 @@ export default function InvitationOpening() {
           4.3,
         );
 
-      ScrollTrigger.refresh();
+      const releaseScroll = () => {
+        window.scrollTo(0, 0);
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+        scrollReleasedRef.current = true;
+        ScrollTrigger.refresh();
+      };
+
+      const releaseFrame = window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(releaseScroll);
+      });
+
+      const orientationRefresh = () => {
+        window.scrollTo(0, 0);
+        ScrollTrigger.refresh();
+      };
+
+      window.addEventListener("orientationchange", orientationRefresh);
+
+      return () => {
+        window.cancelAnimationFrame(releaseFrame);
+        window.removeEventListener(
+          "orientationchange",
+          orientationRefresh,
+        );
+        timeline.scrollTrigger?.kill();
+        timeline.kill();
+      };
     },
     {
       scope: sectionRef,
+      dependencies: [],
+      revertOnUpdate: true,
     },
   );
 
   return (
-    <section
-      ref={sectionRef}
-      className={styles.section}
-    >
-      <div
-        ref={stickyRef}
-        className={styles.sticky}
-      >
-        <div
-          className={styles.backgroundGlow}
-        />
+    <section ref={sectionRef} className={styles.section}>
+      <div ref={stickyRef} className={styles.sticky}>
+        <div className={styles.backgroundGlow} />
 
-        <div
-          className={styles.introduction}
-        >
-          <span>
-            Um convite especial para você
-          </span>
+        <div className={styles.introduction}>
+          <span>Um convite especial para você</span>
 
-          <div
-            className={styles.scrollMessage}
-          >
+          <div className={styles.scrollMessage}>
             <p>Role para abrir</p>
-
-            <ChevronDown
-              size={18}
-              strokeWidth={1.5}
-            />
+            <ChevronDown size={18} strokeWidth={1.5} />
           </div>
         </div>
 
-        <div
-          ref={sceneRef}
-          className={styles.scene}
-        >
-          <div
-            className={
-              styles.openInvitation
-            }
-          >
-            <div
-              className={
-                styles.namesContent
-              }
-            >
-              <p
-                className={styles.subtitle}
-              >
-                O casamento de
-              </p>
+        <div ref={sceneRef} className={styles.scene}>
+          <div className={styles.openInvitation}>
+            <div className={styles.namesContent}>
+              <p className={styles.subtitle}>O casamento de</p>
 
-              <div
-                className={styles.names}
-              >
-                <h1
-                  className={
-                    styles.firstName
-                  }
-                >
-                  Mylena
-                </h1>
-
-                <span
-                  className={
-                    styles.ampersand
-                  }
-                >
-                  &amp;
-                </span>
-
-                <h1
-                  className={
-                    styles.secondName
-                  }
-                >
-                  Nerivaldo
-                </h1>
+              <div className={styles.names}>
+                <h1 className={styles.firstName}>Mylena</h1>
+                <span className={styles.ampersand}>&amp;</span>
+                <h1 className={styles.secondName}>Nerivaldo</h1>
               </div>
 
-              <div
-                className={
-                  styles.decorativeLine
-                }
-              >
+              <div className={styles.decorativeLine}>
                 <span />
-
-                <i aria-hidden="true">
-                  ❦
-                </i>
-
+                <i aria-hidden="true">❦</i>
                 <span />
               </div>
 
-              <p
-                className={
-                  styles.bottomMessage
-                }
-              >
-                Em breve, celebraremos
-                juntos
+              <p className={styles.bottomMessage}>
+                Em breve, celebraremos juntos
               </p>
             </div>
           </div>
 
-          <div
-            className={`${styles.door} ${styles.leftDoor}`}
-          >
-            <div
-              className={styles.leftImage}
-            />
-
-            <div
-              className={styles.leftShadow}
-            />
+          <div className={`${styles.door} ${styles.leftDoor}`}>
+            <div className={styles.leftImage} />
+            <div className={styles.leftShadow} />
           </div>
 
-          <div
-            className={`${styles.door} ${styles.rightDoor}`}
-          >
-            <div
-              className={styles.rightImage}
-            />
-
-            <div
-              className={
-                styles.rightShadow
-              }
-            />
+          <div className={`${styles.door} ${styles.rightDoor}`}>
+            <div className={styles.rightImage} />
+            <div className={styles.rightShadow} />
           </div>
         </div>
 
         <div className={styles.progress}>
-          <span
-            className={styles.progressLine}
-          />
+          <span className={styles.progressLine} />
         </div>
       </div>
     </section>
