@@ -1,0 +1,199 @@
+.soundButton {
+  position: fixed;
+  z-index: 9999;
+  top: max(20px, env(safe-area-inset-top));
+  right: max(20px, env(safe-area-inset-right));
+
+  display: grid;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  place-items: center;
+
+  color: #6f1d2c;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 253, 249, 0.96),
+      rgba(238, 228, 216, 0.92)
+    );
+
+  border: 1px solid
+    rgba(111, 29, 44, 0.18);
+  border-radius: 50%;
+
+  box-shadow:
+    0 12px 30px rgba(67, 38, 26, 0.15),
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.9);
+
+  cursor: pointer;
+  overflow: visible;
+  isolation: isolate;
+
+  transition:
+    transform 300ms ease,
+    box-shadow 300ms ease,
+    color 300ms ease,
+    background 300ms ease;
+}
+
+.soundButton:hover {
+  transform: translateY(-2px) scale(1.04);
+
+  box-shadow:
+    0 16px 38px rgba(67, 38, 26, 0.2),
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.95);
+}
+
+.soundButton:active {
+  transform: scale(0.94);
+}
+
+.soundButton:focus-visible {
+  outline: 2px solid #8b293a;
+  outline-offset: 4px;
+}
+
+.icon {
+  position: relative;
+  z-index: 3;
+
+  display: grid;
+  place-items: center;
+}
+
+.soundActive {
+  color: #fff7ee;
+
+  background:
+    radial-gradient(
+      circle at 35% 25%,
+      #a84556,
+      #741d2d 58%,
+      #50121f
+    );
+
+  border-color:
+    rgba(255, 236, 205, 0.32);
+
+  box-shadow:
+    0 12px 30px
+      rgba(111, 29, 44, 0.3),
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.22);
+}
+
+.soundInactive {
+  color: #6f1d2c;
+}
+
+.pulse {
+  position: absolute;
+  z-index: -1;
+  inset: -1px;
+
+  border: 1px solid
+    rgba(133, 31, 48, 0.35);
+  border-radius: inherit;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+.soundActive .pulse {
+  animation: soundPulse 2.4s ease-out
+    infinite;
+}
+
+.equalizer {
+  position: absolute;
+  z-index: 4;
+  right: 7px;
+  bottom: 9px;
+
+  display: flex;
+  height: 8px;
+  align-items: flex-end;
+  gap: 1px;
+
+  pointer-events: none;
+}
+
+.equalizer i {
+  display: block;
+  width: 1.5px;
+  height: 3px;
+
+  background: currentColor;
+  border-radius: 20px;
+
+  transform-origin: center bottom;
+}
+
+.soundActive .equalizer i {
+  animation: equalizer 800ms ease-in-out
+    infinite alternate;
+}
+
+.soundActive .equalizer i:nth-child(2) {
+  animation-delay: 180ms;
+}
+
+.soundActive .equalizer i:nth-child(3) {
+  animation-delay: 360ms;
+}
+
+.soundInactive .equalizer {
+  display: none;
+}
+
+@keyframes soundPulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+
+@keyframes equalizer {
+  from {
+    height: 2px;
+  }
+
+  to {
+    height: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .soundButton {
+    top: max(
+      16px,
+      env(safe-area-inset-top)
+    );
+
+    right: max(
+      16px,
+      env(safe-area-inset-right)
+    );
+
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .soundButton,
+  .pulse,
+  .equalizer i {
+    animation: none !important;
+    transition: none !important;
+  }
+}

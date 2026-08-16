@@ -1,0 +1,541 @@
+.experience {
+  --wine: #741d2e;
+  --wine-dark: #48101c;
+  --cream: #f5eee4;
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  overflow: hidden;
+  place-items: center;
+  color: #44322c;
+  background-color: #eee7de;
+  background-image: url("/images/convite-aberto2.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100vw 100svh;
+}
+
+.experience::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 35%, rgba(48, 27, 20, .22) 130%);
+}
+
+.ambientGlow {
+  position: absolute;
+  z-index: 0;
+  width: min(90vw, 900px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 248, 230, .62);
+  filter: blur(95px);
+  animation: breathe 5s ease-in-out infinite alternate;
+}
+
+.heading {
+  position: absolute;
+  z-index: 30;
+  top: max(22px, env(safe-area-inset-top));
+  text-align: center;
+  text-transform: uppercase;
+  transition: opacity .55s ease, transform .55s ease;
+}
+
+.heading p {
+  margin: 0 0 7px;
+  font: 12px Georgia, serif;
+  letter-spacing: .22em;
+}
+
+.heading span {
+  color: rgba(68, 50, 44, .65);
+  font-size: 8px;
+  letter-spacing: .24em;
+}
+
+.headingHidden {
+  opacity: 0;
+  transform: translateY(-15px);
+  pointer-events: none;
+}
+
+.bookArea {
+  position: relative;
+  z-index: 4;
+  width: min(94vw, 960px);
+  height: min(82svh, 760px);
+  transform: translateY(2vh);
+  filter: drop-shadow(0 24px 28px rgba(55, 31, 23, .25));
+  transition: transform .8s cubic-bezier(.2,.8,.2,1), filter .8s ease;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.bookStarted {
+  transform: translateY(-1vh);
+  filter: drop-shadow(0 30px 36px rgba(55, 31, 23, .3));
+}
+
+.splitCover {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  width: 100vw;
+  height: 100svh;
+  overflow: visible;
+  perspective: 1600px;
+  pointer-events: auto;
+  transform-style: preserve-3d;
+}
+
+.coverHalf {
+  position: absolute;
+  top: 0;
+  width: 50.1%;
+  height: 100%;
+  overflow: hidden;
+  background-image: url("/images/convite-fechado.png");
+  background-repeat: no-repeat;
+  background-size: 100vw 100svh;
+  backface-visibility: hidden;
+  will-change: transform, filter, opacity;
+  transition:
+    transform 1.35s cubic-bezier(.17,.76,.14,1),
+    filter 1.1s ease,
+    opacity .35s ease 1.05s;
+}
+
+.coverHalf::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .55s ease;
+}
+
+.coverHalfLeft {
+  left: 0;
+  background-position: left center;
+  transform-origin: left center;
+}
+
+.coverHalfLeft::after {
+  background: linear-gradient(90deg, transparent 60%, rgba(52,30,23,.3));
+}
+
+.coverHalfRight {
+  right: 0;
+  background-position: right center;
+  transform-origin: right center;
+}
+
+.coverHalfRight::after {
+  background: linear-gradient(-90deg, transparent 60%, rgba(52,30,23,.3));
+}
+
+.splitShadow {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  opacity: .24;
+  transform: translateX(-50%);
+  background: rgba(54,31,23,.55);
+  box-shadow: 0 0 13px rgba(47,26,19,.35);
+  transition: opacity .45s ease, width .8s ease;
+}
+
+.splitCoverOpening {
+  pointer-events: none;
+}
+
+.splitCoverOpening .coverHalfLeft {
+  opacity: 0;
+  filter: brightness(.76) saturate(.88);
+  transform: translateX(-100%) rotateY(21deg) rotateZ(-.5deg);
+}
+
+.splitCoverOpening .coverHalfRight {
+  opacity: 0;
+  filter: brightness(.76) saturate(.88);
+  transform: translateX(100%) rotateY(-21deg) rotateZ(.5deg);
+}
+
+.splitCoverOpening .coverHalf::after {
+  opacity: 1;
+}
+
+.splitCoverOpening .splitShadow {
+  width: 30px;
+  opacity: 0;
+}
+
+.splitCoverOpening .sealButton {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.68) rotate(12deg);
+  pointer-events: none;
+}
+
+.flipBook {
+  margin: auto;
+}
+
+.page {
+  position: relative;
+  overflow: hidden;
+  color: #44322c;
+  background-color: #eee7de;
+  background-image: url("/images/convite-aberto2.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  box-shadow: inset 0 0 34px rgba(91, 59, 43, .075);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(118, 72, 44, .045), transparent 30%),
+    linear-gradient(110deg, transparent 37%, rgba(255,255,255,.2) 52%, transparent 68%);
+}
+
+.paperTexture {
+  position: absolute;
+  inset: 0;
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  background-image: url("/images/convite-aberto2.png");
+  background-position: center;
+  background-size: cover;
+  mix-blend-mode: multiply;
+}
+
+.pageBorder {
+  position: absolute;
+  z-index: 2;
+  inset: 9px;
+  pointer-events: none;
+  border: 1px solid rgba(147, 106, 68, .15);
+}
+
+.pageBorder::before,
+.pageBorder::after {
+  content: "❦";
+  position: absolute;
+  color: rgba(136, 88, 52, .28);
+  font-size: 22px;
+}
+
+.pageBorder::before {
+  top: 8px;
+  right: 11px;
+}
+
+.pageBorder::after {
+  bottom: 8px;
+  left: 11px;
+  transform: rotate(180deg);
+}
+
+.pageBody {
+  position: absolute;
+  z-index: 3;
+  inset: 6% 8%;
+}
+
+.pageBody > * {
+  width: 100%;
+  height: 100%;
+}
+
+.pageNumber {
+  position: absolute;
+  z-index: 5;
+  right: 23px;
+  bottom: 17px;
+  color: rgba(69, 48, 40, .48);
+  font-size: 8px;
+  letter-spacing: .18em;
+}
+
+.cornerHint {
+  position: absolute;
+  z-index: 7;
+  right: 0;
+  bottom: 0;
+  width: 58px;
+  height: 58px;
+  pointer-events: none;
+  background: linear-gradient(135deg, transparent 49%, rgba(197, 181, 159, .88) 50%);
+  filter: drop-shadow(-5px -5px 6px rgba(62, 39, 29, .12));
+  opacity: .72;
+  transition: width .3s ease, height .3s ease;
+}
+
+.page:hover .cornerHint {
+  width: 76px;
+  height: 76px;
+}
+
+.coverPage {
+  background: #eee6db;
+}
+
+.coverPage .paperTexture,
+.coverPage .pageBorder,
+.coverPage .cornerHint {
+  display: none;
+}
+
+.coverPage .pageBody {
+  inset: 0;
+}
+
+.coverImage {
+  object-fit: cover;
+  object-position: center;
+  user-select: none;
+  pointer-events: none;
+}
+
+.sealButton {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: clamp(88px, 25vw, 112px);
+  aspect-ratio: 1;
+  padding: 0;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  color: transparent;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity .35s ease, transform .45s cubic-bezier(.2,.8,.2,1);
+}
+
+.sealButton span,
+.sealButton::before,
+.sealButton::after {
+  content: "";
+  position: absolute;
+  inset: 5%;
+  border: 1px solid rgba(105, 20, 37, .38);
+  border-radius: 50%;
+  opacity: 0;
+  animation: sealPulse 2.4s ease-out infinite;
+}
+
+.sealButton::after { animation-delay: .75s; }
+.sealButton span { animation-delay: 1.5s; }
+.sealButton strong {
+  position: absolute;
+  top: calc(100% + 10px);
+  color: #5d352d;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+}
+
+.backCover {
+  color: var(--wine);
+  background-color: #eee7de;
+  background-image: url("/images/convite-aberto2.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.backCover .paperTexture,
+.backCover .pageBorder,
+.backCover .cornerHint {
+  display: none;
+}
+
+.finalPage {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.finalPage p {
+  margin: 17px 0 8px;
+  font: italic 15px Georgia, serif;
+}
+
+.finalPage h2 {
+  margin: 0;
+  color: var(--wine);
+  font: italic 40px/1.1 Georgia, serif;
+}
+
+.finalPage h2 span {
+  display: block;
+  color: #a16f3d;
+  font-size: .65em;
+}
+
+.finalPage small {
+  margin-top: 25px;
+  letter-spacing: .22em;
+}
+
+.controls {
+  position: absolute;
+  z-index: 25;
+  bottom: max(15px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  opacity: 0;
+  transform: translateY(15px);
+  pointer-events: none;
+  transition: opacity .6s ease .7s, transform .6s ease .7s;
+}
+
+.controlsVisible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.controls p {
+  display: flex;
+  margin: 0;
+  gap: 5px;
+  font-size: 9px;
+}
+
+.progressTrack {
+  width: 85px;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(116, 29, 46, .17);
+}
+
+.progressTrack span {
+  display: block;
+  height: 100%;
+  background: var(--wine);
+  transition: width .45s ease;
+}
+
+.gestureTip {
+  position: absolute;
+  z-index: 24;
+  right: max(22px, env(safe-area-inset-right));
+  bottom: max(28px, env(safe-area-inset-bottom));
+  margin: 0;
+  color: rgba(69, 48, 40, .62);
+  font-size: 8px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+@keyframes sealPulse {
+  0% { opacity: .6; transform: scale(.72); }
+  75%, 100% { opacity: 0; transform: scale(1.48); }
+}
+
+@keyframes breathe {
+  to { opacity: .72; transform: scale(1.1); }
+}
+
+@media (max-width: 760px) {
+  .experience {
+    overscroll-behavior: none;
+  }
+
+  .bookArea {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100svh;
+    transform: none;
+    filter: none;
+  }
+
+  .splitCover {
+    width: 100vw;
+    height: 100svh;
+  }
+
+  .flipBook {
+    width: 100vw !important;
+    height: 100svh !important;
+  }
+
+  .page {
+    width: 100% !important;
+    height: 100% !important;
+    background-image: url("/images/convite-aberto2.png");
+    background-position: center;
+    background-size: 100% 100%;
+  }
+
+  .pageBorder {
+    display: none;
+  }
+
+  .backCover {
+    color: var(--wine);
+    background-color: #eee7de;
+    background-image: url("/images/convite-aberto2.png");
+    background-position: center;
+    background-size: 100vw 100svh;
+  }
+
+  .finalPage h2 {
+    font-size: clamp(36px, 10vw, 44px);
+    text-align: center;
+  }
+
+  .heading {
+    top: max(18px, env(safe-area-inset-top));
+  }
+
+  .controls {
+    bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .gestureTip {
+    display: none;
+  }
+
+  .pageBody {
+    inset: 7% 9% 8%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambientGlow,
+  .sealButton span,
+  .sealButton::before,
+  .sealButton::after {
+    animation: none !important;
+  }
+}

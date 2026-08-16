@@ -1,0 +1,282 @@
+.experience {
+  --wine: #731d2e;
+  --wine-dark: #47101c;
+  --gold: #b68b51;
+  --ink: #3f302b;
+  --paper: #f5eee4;
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  overflow: hidden;
+  place-items: center;
+  color: var(--ink);
+  background: #d9cdc0 url("/images/convite-aberto2.png") center / cover no-repeat;
+  perspective: 1800px;
+}
+
+.experience::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 34%, rgba(51, 31, 23, .22) 125%);
+}
+
+.ambientLight {
+  position: absolute;
+  width: min(92vw, 1000px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 247, 228, .55);
+  filter: blur(100px);
+  animation: breathe 6s ease-in-out infinite alternate;
+}
+
+.floatingDust { position: absolute; inset: 0; pointer-events: none; }
+.floatingDust i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(255,245,220,.8); animation: dust 8s linear infinite; }
+.floatingDust i:nth-child(1){left:8%;top:80%;animation-delay:-1s}.floatingDust i:nth-child(2){left:17%;top:63%;animation-delay:-5s}.floatingDust i:nth-child(3){left:28%;top:90%;animation-delay:-3s}.floatingDust i:nth-child(4){left:38%;top:72%;animation-delay:-7s}.floatingDust i:nth-child(5){left:48%;top:88%;animation-delay:-2s}.floatingDust i:nth-child(6){left:59%;top:76%;animation-delay:-6s}.floatingDust i:nth-child(7){left:68%;top:94%;animation-delay:-4s}.floatingDust i:nth-child(8){left:78%;top:67%;animation-delay:-8s}.floatingDust i:nth-child(9){left:89%;top:86%;animation-delay:-2.5s}.floatingDust i:nth-child(10){left:23%;top:54%;animation-delay:-6.5s}.floatingDust i:nth-child(11){left:72%;top:58%;animation-delay:-4.5s}.floatingDust i:nth-child(12){left:94%;top:73%;animation-delay:-.5s}
+
+.intro { position: absolute; z-index: 20; top: clamp(25px, 5vh, 55px); text-align: center; letter-spacing: .18em; text-transform: uppercase; transition: opacity .6s ease, transform .6s ease; }
+.intro p { margin: 0 0 7px; font-family: Georgia, serif; font-size: 13px; }
+.intro span { color: rgba(63,48,43,.65); font-size: 9px; }
+.introHidden { opacity: 0; transform: translateY(-15px); pointer-events: none; }
+
+.closedInvitation {
+  position: absolute;
+  z-index: 50;
+  inset: 0;
+  overflow: hidden;
+  perspective: 1600px;
+  pointer-events: auto;
+  transform-style: preserve-3d;
+}
+
+.closedHalf {
+  position: absolute;
+  top: 0;
+  width: 50.15%;
+  height: 100%;
+  background-image: url("/images/convite-fechado.png");
+  background-repeat: no-repeat;
+  background-size: 100vw 100svh;
+  backface-visibility: hidden;
+  will-change: transform, filter;
+  transition:
+    transform 1.65s cubic-bezier(.18,.72,.12,1),
+    filter 1.2s ease,
+    opacity .4s ease 1.25s;
+}
+
+.closedLeft {
+  left: 0;
+  background-position: left center;
+  transform-origin: left center;
+}
+
+.closedRight {
+  right: 0;
+  background-position: right center;
+  transform-origin: right center;
+}
+
+.closedInvitationOpened {
+  pointer-events: none;
+}
+
+.closedInvitationOpened .closedLeft {
+  opacity: 0;
+  filter: brightness(.72) blur(1px);
+  transform: translateX(-101%) rotateY(18deg);
+}
+
+.closedInvitationOpened .closedRight {
+  opacity: 0;
+  filter: brightness(.72) blur(1px);
+  transform: translateX(101%) rotateY(-18deg);
+}
+
+.centralSealButton {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: clamp(94px, 28vw, 124px);
+  aspect-ratio: 1;
+  padding: 0;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  color: transparent;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.centralSealButton::before,
+.centralSealButton::after,
+.centralSealButton span {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border: 1px solid rgba(109, 21, 38, .3);
+  border-radius: 50%;
+  opacity: 0;
+  animation: closedSealPulse 2.5s ease-out infinite;
+}
+
+.centralSealButton::after { animation-delay: .75s; }
+.centralSealButton span { animation-delay: 1.5s; }
+.centralSealButton strong {
+  position: absolute;
+  top: calc(100% + 13px);
+  width: 150px;
+  color: #5d352d;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  text-shadow: 0 1px rgba(255,255,255,.7);
+}
+
+.bookStage { position: relative; z-index: 3; width: min(90vw, 940px); height: min(76svh, 680px); transform: translateX(-25%) translateY(3vh); transition: transform 1.2s cubic-bezier(.2,.8,.15,1); touch-action: pan-y; }
+.stageOpened { transform: translateX(0) translateY(-1vh); }
+.bookShadow { position: absolute; right: 4%; bottom: -5%; left: 4%; height: 11%; border-radius: 50%; background: rgba(47,26,19,.38); filter: blur(23px); transition: transform 1.2s ease; }
+.stageOpened .bookShadow { transform: scaleX(1.2); }
+.book { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(2deg); }
+
+.backCover,.pageBlock,.basePage,.sheet,.cover { position: absolute; top: 0; right: 0; width: 50%; height: 100%; border-radius: 2px 13px 13px 2px; transform-origin: left center; transform-style: preserve-3d; }
+.backCover { z-index: 0; background: linear-gradient(135deg,#641729,#8a2b3c 45%,#4f1020); box-shadow: 12px 14px 35px rgba(49,26,20,.3); }
+.pageBlock { z-index: 1; top: 5px; right: 4px; height: calc(100% - 10px); background: repeating-linear-gradient(0deg,#d8c9b7 0 1px,#f3eadf 1px 4px); box-shadow: 5px 5px 10px rgba(50,28,20,.18); }
+.basePage,.sheet { overflow: visible; background: var(--paper); box-shadow: inset 14px 0 18px -18px rgba(37,20,15,.45); }
+.basePage { z-index: 2; overflow: hidden; }
+.sheet { transition: transform .9s cubic-bezier(.15,.72,.18,1); will-change: transform; }
+.sheet.flipped { transform: rotateY(-180deg); }
+.face { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; backface-visibility: hidden; background: var(--paper); }
+.front { box-shadow: inset 15px 0 22px -20px rgba(34,20,16,.52), inset -2px 0 rgba(119,91,71,.12); }
+.back { transform: rotateY(180deg); border-radius: 13px 2px 2px 13px; box-shadow: inset -15px 0 22px -20px rgba(34,20,16,.5); }
+.paperDecoration { position: absolute; inset: 8px; pointer-events: none; border: 1px solid rgba(155,119,80,.18); background: linear-gradient(115deg,transparent 35%,rgba(255,255,255,.18),transparent 64%), radial-gradient(circle at 10% 8%,rgba(120,75,43,.055),transparent 27%); }
+.paperDecoration::before,.paperDecoration::after { content:"❦"; position:absolute; color:rgba(141,94,58,.32); font-size:23px; }
+.paperDecoration::before { top:8px; right:11px; }.paperDecoration::after { bottom:8px; left:11px; transform:rotate(180deg); }
+.pageContent { position: absolute; z-index: 2; inset: 7% 9%; display: grid; place-items: center; text-align: center; }
+.pageNumber { position: absolute; z-index: 3; right: 24px; bottom: 18px; color: rgba(82,54,43,.48); font-size: 9px; letter-spacing: .15em; }
+
+.cover { z-index: 30; right: 0; transition: transform 1.45s cubic-bezier(.16,.78,.12,1); }
+.coverOpened { transform: rotateY(-180deg); }
+.coverFront,.coverInside { position:absolute; inset:0; overflow:hidden; border-radius:2px 13px 13px 2px; backface-visibility:hidden; }
+.coverFront { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px; color:#fff9ed; text-align:center; background:#eee5d9 url("/images/convite-fechado.png") center/cover no-repeat; border:1px solid rgba(139,106,77,.2); box-shadow:inset 0 0 0 7px rgba(255,255,255,.045),10px 12px 30px rgba(45,22,17,.3); }
+.coverFront::after { content:""; position:absolute; inset:-40% -80%; background:linear-gradient(105deg,transparent 42%,rgba(255,240,205,.13) 50%,transparent 58%); animation:coverShine 5s ease-in-out infinite; }
+.coverFrame { position:absolute; inset:18px; border:1px solid rgba(225,190,132,.5); box-shadow:inset 0 0 0 4px rgba(225,190,132,.08); }
+.coverBotanical { position:absolute; inset:27px; border-radius:50% 10% 50% 10%; border:1px solid rgba(229,197,143,.12); transform:rotate(45deg); }
+.coverFront p,.coverFront h1,.coverFront small,.openButton { position:relative; z-index:2; }
+.coverFront p { margin:0 0 20px; font-size:10px; letter-spacing:.28em; text-transform:uppercase; }
+.coverFront h1 { margin:0; font:italic clamp(34px,5vw,54px)/1.12 Georgia,serif; }
+.coverFront h1 span { display:block; margin:7px; color:#e4bd7b; font-size:.55em; }
+.coverFront small { margin-top:24px; letter-spacing:.25em; }
+.coverInside { display:grid; place-items:center; transform:rotateY(180deg); color:rgba(116,35,48,.45); background:var(--paper); box-shadow:inset -16px 0 24px -21px #2e1713; }
+.insideMonogram,.backOrnament { font:italic 38px Georgia,serif; }.insideMonogram span,.backOrnament span { color:var(--gold); }
+
+.openButton { display:grid; width:92px; height:92px; margin-top:35px; place-items:center; color:#f5d9a5; border:1px solid rgba(255,222,167,.45); border-radius:50%; background:radial-gradient(circle at 35% 27%,#a94758,#6f172a 62%,#400914); box-shadow:0 12px 26px rgba(31,7,12,.38),inset 0 1px rgba(255,255,255,.25); cursor:pointer; transition:transform .3s ease; }
+.openButton:hover { transform:scale(1.07); }.openButton strong { position:absolute; bottom:-25px; color:#fff4e2; font-size:9px; font-weight:500; letter-spacing:.25em; text-transform:uppercase; }
+.sealRing { position:absolute; inset:-7px; border:1px solid rgba(241,207,153,.5); border-radius:50%; animation:sealPulse 2.3s ease-out infinite; }
+
+.namesPage,.storyPage,.datePage,.placePage,.guestPage,.giftPage,.accessPage,.endPage { display:flex; width:100%; height:100%; align-items:center; justify-content:center; flex-direction:column; }
+.eyebrow { margin:0 0 13px; color:#735b51; font-size:9px!important; letter-spacing:.25em; text-transform:uppercase; }
+.namesPage h1 { margin:0; color:var(--ink); font:italic clamp(35px,5vw,59px)/1.05 Georgia,serif; }
+.ampersand { margin:8px; color:var(--wine); font:italic 30px Georgia,serif; }
+.italic { font:italic 14px Georgia,serif!important; }
+.ornament { display:flex; width:78%; margin:24px 0; align-items:center; gap:12px; color:var(--wine); }.ornament span{height:1px;flex:1;background:rgba(115,29,46,.45)}
+.storyPage h2,.placePage h2,.guestPage h2,.giftPage h2,.accessPage h2,.endPage h2 { margin:0 0 20px; color:var(--wine); font:38px/1 Georgia,serif; text-transform:uppercase; }
+.storyPage>p:last-child,.guestPage>p:last-child,.giftPage>p { max-width:310px; font:14px/1.65 Georgia,serif; }
+.photo { position:relative; width:min(80%,280px); aspect-ratio:4/5; margin:0 0 20px; overflow:hidden; border:9px solid #fffaf1; box-shadow:0 13px 26px rgba(63,38,24,.17); transform:rotate(-1deg); }.photo img{object-fit:cover}
+.datePage h2 { margin:5px 0 -8px; color:var(--wine); font:96px/.9 Georgia,serif; }.datePage>strong{font:italic 28px Georgia,serif}.datePage h3{margin:9px 0 25px;font:28px Georgia,serif}.pageSeal{display:grid;width:64px;height:64px;margin-bottom:22px;place-items:center;color:#f5d69c;border-radius:50%;background:var(--wine);box-shadow:0 8px 18px rgba(80,16,28,.25)}
+.dateDetails{display:flex;gap:17px}.dateDetails span{display:flex;align-items:center;gap:6px;font-size:11px}
+.churchIcon{margin-bottom:20px;color:var(--wine)}.placePage h2{font-size:33px}.addressCard{display:flex;max-width:300px;margin:12px 0 24px;padding:18px;gap:13px;text-align:left;border:1px solid rgba(115,29,46,.15);background:rgba(255,255,255,.35)}.addressCard strong{font:17px Georgia,serif}.addressCard p,.addressCard span{margin:5px 0;font-size:11px}
+.actionButton{display:inline-flex;min-height:43px;padding:0 23px;align-items:center;justify-content:center;color:#fff9ef;text-decoration:none;border:0;border-radius:99px;background:var(--wine);box-shadow:0 10px 22px rgba(115,29,46,.23);cursor:pointer}
+.guestPage>svg,.giftPage>svg,.accessPage>svg{margin-bottom:17px;color:var(--wine)}.guestPage h2{font-size:34px;text-transform:none}.giftPage h2,.accessPage h2{font-size:31px}.giftPage .actionButton{margin-top:22px}
+.qrBox{position:relative;margin:5px 0 18px;padding:13px;overflow:hidden;background:#fffaf2;box-shadow:0 11px 24px rgba(48,28,20,.14)}.scanLine{position:absolute;z-index:2;right:8px;left:8px;height:2px;background:linear-gradient(90deg,transparent,#b52f48,transparent);animation:scan 2.8s ease-in-out infinite}.accessPage>strong{font-size:11px;letter-spacing:.12em}.accessPage small{margin-top:7px;color:#7c665e}.endPage{color:var(--wine)}.endPage h2{margin-top:12px;font-size:48px}.monogram{display:grid;width:100px;height:100px;margin:15px 0 20px;place-items:center;border:1px solid rgba(115,29,46,.35);border-radius:50%;font:italic 25px Georgia,serif}.monogram span{color:var(--gold)}
+.finalInside{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;color:rgba(91,47,39,.5);font:italic 15px Georgia,serif}.finalInside strong{margin-top:8px;font-size:22px}.backOrnament{position:absolute;inset:0;display:grid;place-items:center;color:rgba(105,62,48,.18)}
+
+.pageCorner { position:absolute; z-index:10; right:0; bottom:0; width:72px; height:72px; padding:0; border:0; background:transparent; cursor:pointer; }
+.pageCorner::before { content:""; position:absolute; right:0; bottom:0; width:0; height:0; border-top:72px solid transparent; border-right:72px solid #ded0be; filter:drop-shadow(-6px -6px 7px rgba(57,33,25,.16)); transition:border-width .3s ease; }
+.pageCorner::after { content:""; position:absolute; right:11px; bottom:12px; width:8px; height:8px; border-right:1px solid var(--wine); border-bottom:1px solid var(--wine); transform:rotate(-45deg); }
+.pageCorner:hover::before { border-top-width:90px; border-right-width:90px; }
+
+.controls { position:absolute; z-index:20; bottom:clamp(18px,3vh,34px); display:flex; align-items:center; gap:11px; opacity:0; transform:translateY(15px); pointer-events:none; transition:.7s ease 1s; }
+.controlsVisible{opacity:1;transform:none;pointer-events:auto}.controls button{display:grid;width:38px;height:38px;place-items:center;color:var(--wine);border:1px solid rgba(115,29,46,.18);border-radius:50%;background:rgba(255,250,242,.82);backdrop-filter:blur(8px);cursor:pointer}.controls button:disabled{opacity:.3;cursor:default}.controls p{width:40px;font-size:10px;text-align:center}.progress{width:90px;height:2px;overflow:hidden;background:rgba(115,29,46,.16)}.progress span{display:block;height:100%;background:var(--wine);transition:width .5s ease}.tip{position:absolute;z-index:12;right:4vw;bottom:28px;margin:0;color:rgba(64,47,41,.65);font-size:9px;letter-spacing:.14em;text-transform:uppercase}
+
+@keyframes breathe{to{transform:scale(1.12);opacity:.7}}@keyframes dust{from{transform:translateY(15vh);opacity:0}20%{opacity:.7}to{transform:translateY(-90vh);opacity:0}}@keyframes coverShine{0%,30%{transform:translateX(-35%)}70%,100%{transform:translateX(35%)}}@keyframes sealPulse{0%{opacity:.65;transform:scale(.9)}80%,100%{opacity:0;transform:scale(1.35)}}@keyframes scan{0%,10%{top:10%;opacity:0}25%{opacity:1}80%{opacity:1}90%,100%{top:88%;opacity:0}}
+@keyframes closedSealPulse{0%{opacity:.55;transform:scale(.72)}70%,100%{opacity:0;transform:scale(1.48)}}
+
+@media (max-width:700px){
+  .closedHalf { background-size: 100vw 100svh; }
+  .bookStage{width:min(164vw,780px);height:min(72svh,630px);transform:translateX(-25%) translateY(3vh)}
+  .stageOpened{transform:translateX(-25%) translateY(-1vh)}
+  .intro{top:25px}.tip{display:none}.controls{bottom:14px}
+  .storyPage h2,.placePage h2,.guestPage h2,.giftPage h2,.accessPage h2{font-size:29px}
+  .storyPage>p:last-child,.guestPage>p:last-child,.giftPage>p{font-size:12px}
+  .photo{width:min(78%,230px)}
+
+  .giftPage,
+  .accessPage,
+  .endPage {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .giftPage h2 {
+    width: 100%;
+    max-width: 310px;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: clamp(24px, 7vw, 28px);
+    line-height: 1.08;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .giftPage > p {
+    width: 100%;
+    max-width: 310px;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 13px;
+    line-height: 1.65;
+    text-align: center;
+  }
+
+  .accessPage h2 {
+    width: 100%;
+    max-width: 300px;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: clamp(25px, 7.4vw, 30px);
+    line-height: 1.02;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .accessPage > strong {
+    width: 100%;
+    text-align: center;
+  }
+
+  .endPage h2 {
+    width: 100%;
+    max-width: 310px;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: clamp(37px, 11vw, 45px);
+    line-height: .98;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .endPage .monogram {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-height:700px){.bookStage{height:72svh}.intro{top:13px}.controls{bottom:8px}.photo{width:min(62%,210px)}.pageContent{inset:5% 8%}}
+@media (prefers-reduced-motion:reduce){.ambientLight,.floatingDust i,.coverFront::after,.sealRing,.scanLine,.centralSealButton::before,.centralSealButton::after,.centralSealButton span{animation:none!important}.bookStage,.sheet,.cover,.controls,.closedHalf{transition-duration:.01ms!important}}
