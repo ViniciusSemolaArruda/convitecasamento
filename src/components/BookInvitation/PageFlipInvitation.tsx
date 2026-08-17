@@ -261,13 +261,19 @@ export default function PageFlipInvitation() {
           usePortrait={isPortrait}
           startPage={0}
           drawShadow
-          flippingTime={1150}
+          flippingTime={
+            isPortrait ? 780 : 1050
+          }
           useMouseEvents
-          swipeDistance={48}
+          swipeDistance={
+            isPortrait ? 14 : 38
+          }
           clickEventForward
           disableFlipByClick
           mobileScrollSupport={false}
-          maxShadowOpacity={0.48}
+          maxShadowOpacity={
+            isPortrait ? 0.36 : 0.46
+          }
           showPageCorners
           autoSize
           onFlip={(event: { data: number }) => {
