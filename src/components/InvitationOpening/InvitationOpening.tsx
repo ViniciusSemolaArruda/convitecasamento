@@ -25,11 +25,11 @@ export default function InvitationOpening() {
 
   useGSAP(
     () => {
-      if (
-        !sectionRef.current ||
-        !stickyRef.current ||
-        !sceneRef.current
-      ) {
+      const section = sectionRef.current;
+      const sticky = stickyRef.current;
+      const scene = sceneRef.current;
+
+      if (!section || !sticky || !scene) {
         return;
       }
 
@@ -92,7 +92,9 @@ export default function InvitationOpening() {
         },
 
         scrollTrigger: {
-          trigger: sectionRef.current,
+          id: "invitation-opening",
+
+          trigger: section,
           start: "top top",
 
           end: () =>
@@ -100,11 +102,12 @@ export default function InvitationOpening() {
 
           scrub: 1.15,
 
-          pin: stickyRef.current,
+          pin: sticky,
           pinSpacing: true,
 
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          fastScrollEnd: false,
         },
       });
 
@@ -129,7 +132,7 @@ export default function InvitationOpening() {
         )
 
         .to(
-          sceneRef.current,
+          scene,
           {
             scale: 1.015,
             duration: 0.9,
@@ -279,10 +282,40 @@ export default function InvitationOpening() {
           4.3,
         );
 
-      ScrollTrigger.refresh();
+      const handleOrientationChange = () => {
+        window.setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 250);
+      };
+
+      window.addEventListener(
+        "orientationchange",
+        handleOrientationChange,
+      );
+
+      const refreshTimer = window.setTimeout(
+        () => {
+          ScrollTrigger.refresh();
+        },
+        100,
+      );
+
+      return () => {
+        window.clearTimeout(refreshTimer);
+
+        window.removeEventListener(
+          "orientationchange",
+          handleOrientationChange,
+        );
+
+        timeline.scrollTrigger?.kill();
+        timeline.kill();
+      };
     },
     {
       scope: sectionRef,
+      dependencies: [],
+      revertOnUpdate: true,
     },
   );
 
@@ -299,16 +332,12 @@ export default function InvitationOpening() {
           className={styles.backgroundGlow}
         />
 
-        <div
-          className={styles.introduction}
-        >
+        <div className={styles.introduction}>
           <span>
             Um convite especial para você
           </span>
 
-          <div
-            className={styles.scrollMessage}
-          >
+          <div className={styles.scrollMessage}>
             <p>Role para abrir</p>
 
             <ChevronDown
@@ -323,44 +352,30 @@ export default function InvitationOpening() {
           className={styles.scene}
         >
           <div
-            className={
-              styles.openInvitation
-            }
+            className={styles.openInvitation}
           >
             <div
-              className={
-                styles.namesContent
-              }
+              className={styles.namesContent}
             >
-              <p
-                className={styles.subtitle}
-              >
+              <p className={styles.subtitle}>
                 O casamento de
               </p>
 
-              <div
-                className={styles.names}
-              >
+              <div className={styles.names}>
                 <h1
-                  className={
-                    styles.firstName
-                  }
+                  className={styles.firstName}
                 >
                   Mylena
                 </h1>
 
                 <span
-                  className={
-                    styles.ampersand
-                  }
+                  className={styles.ampersand}
                 >
                   &amp;
                 </span>
 
                 <h1
-                  className={
-                    styles.secondName
-                  }
+                  className={styles.secondName}
                 >
                   Nerivaldo
                 </h1>
@@ -411,9 +426,7 @@ export default function InvitationOpening() {
             />
 
             <div
-              className={
-                styles.rightShadow
-              }
+              className={styles.rightShadow}
             />
           </div>
         </div>

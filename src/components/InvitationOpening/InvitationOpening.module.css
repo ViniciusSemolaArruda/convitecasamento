@@ -1,18 +1,34 @@
 .section {
   position: relative;
   width: 100%;
-  min-height: 100svh;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+
   background: #e9e0d4;
 }
 
 .sticky {
   position: relative;
-  width: 100%;
-  height: 100svh;
-  overflow: hidden;
+
   display: flex;
+  width: 100%;
+
+  /*
+   * 100vh funciona como fallback.
+   * 100dvh acompanha a altura do celular.
+   */
+  height: 100vh;
+  height: 100dvh;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  overflow: hidden;
+
   align-items: center;
   justify-content: center;
+
   background:
     radial-gradient(
       circle at 50% 42%,
@@ -20,6 +36,7 @@
       transparent 48%
     ),
     #e9e0d4;
+
   perspective: 1800px;
 }
 
@@ -27,48 +44,67 @@
   position: absolute;
   top: 50%;
   left: 50%;
+
   width: min(110vw, 900px);
   aspect-ratio: 1;
+
   border-radius: 50%;
+
   transform: translate(-50%, -50%);
+
   background: rgba(255, 253, 248, 0.58);
+
   filter: blur(80px);
+
   pointer-events: none;
 }
 
 .scene {
   position: relative;
   z-index: 2;
+
   width: 100%;
   height: 100%;
+
   overflow: hidden;
+
   transform-style: preserve-3d;
+
   background: #f3ede4;
+
   will-change: transform;
 }
 
-/* Imagem limpa do convite aberto */
+/* Imagem do convite aberto */
 
 .openInvitation {
   position: absolute;
   inset: 0;
+
   overflow: hidden;
+
   background-color: #f3ede4;
   background-image:
     url("/images/convite-aberto2.png");
+
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+
   transform-origin: center;
+
   will-change: transform;
 }
 
 .openInvitation::after {
   content: "";
+
   position: absolute;
-  inset: 0;
   z-index: 1;
+  inset: 0;
+
   pointer-events: none;
+
   background:
     linear-gradient(
       90deg,
@@ -85,105 +121,114 @@
     );
 }
 
-/* Conteúdo dos nomes */
+/* Conteúdo central */
 
 .namesContent {
   position: absolute;
   z-index: 4;
+
   top: 50%;
   left: 50%;
-  width: min(76vw, 560px);
-  transform: translate(-50%, -50%);
+
   display: flex;
-  flex-direction: column;
+  width: min(76vw, 560px);
+
   align-items: center;
+  flex-direction: column;
+
+  transform: translate(-50%, -50%);
+
   color: #4d4037;
   text-align: center;
+
+  pointer-events: none;
 }
 
 .subtitle {
   margin: 0 0 clamp(24px, 4vh, 42px);
+
   font-family:
     Arial,
     Helvetica,
     sans-serif;
-  font-size: clamp(
-    10px,
-    2.8vw,
-    15px
-  );
+
+  font-size: clamp(10px, 2.8vw, 15px);
   font-weight: 400;
+
   letter-spacing: 0.34em;
   text-transform: uppercase;
 }
 
 .names {
   display: flex;
-  flex-direction: column;
+
   align-items: center;
+  flex-direction: column;
 }
 
 .names h1 {
   margin: 0;
+
   font-family:
     "Times New Roman",
     Times,
     serif;
-  font-size: clamp(
-    58px,
-    16vw,
-    128px
-  );
+
+  font-size: clamp(58px, 16vw, 128px);
   font-weight: 400;
   font-style: italic;
+
   line-height: 0.84;
   letter-spacing: -0.065em;
+
   text-shadow:
-    0 2px 2px
-    rgba(88, 58, 41, 0.08);
+    0 2px 2px rgba(88, 58, 41, 0.08);
 }
 
 .firstName,
 .secondName {
   opacity: 0;
+
   transform: translateY(25px);
 }
 
 .ampersand {
   position: relative;
   z-index: 2;
-  margin:
-    clamp(12px, 2.5vh, 24px)
-    0;
+
+  margin: clamp(12px, 2.5vh, 24px) 0;
+
   color: #861f2c;
+
   font-family:
     Georgia,
     "Times New Roman",
     serif;
-  font-size: clamp(
-    32px,
-    8vw,
-    58px
-  );
+
+  font-size: clamp(32px, 8vw, 58px);
   font-weight: 400;
   font-style: italic;
 }
 
 .decorativeLine {
-  width: min(70%, 270px);
-  margin-top:
-    clamp(30px, 5vh, 55px);
   display: flex;
+  width: min(70%, 270px);
+
+  margin-top: clamp(30px, 5vh, 55px);
+
   align-items: center;
   gap: 14px;
+
   color: #8a2430;
+
   opacity: 0;
   transform: scaleX(0.35);
 }
 
 .decorativeLine span {
-  flex: 1;
   height: 1px;
+  flex: 1;
+
   background: currentColor;
 }
 
@@ -192,42 +237,44 @@
     Georgia,
     "Times New Roman",
     serif;
+
   font-size: 20px;
   font-style: normal;
 }
 
 .bottomMessage {
-  margin:
-    clamp(20px, 3vh, 32px)
-    0 0;
+  margin: clamp(20px, 3vh, 32px) 0 0;
+
   font-family:
     Georgia,
     "Times New Roman",
     serif;
-  font-size: clamp(
-    13px,
-    3.2vw,
-    18px
-  );
+
+  font-size: clamp(13px, 3.2vw, 18px);
   font-weight: 400;
   font-style: italic;
+
   letter-spacing: 0.04em;
 }
 
-/* Duas metades do convite fechado */
+/* Duas metades do convite */
 
 .door {
   position: absolute;
   z-index: 10;
+
   top: 0;
+
   width: 50.1%;
   height: 100%;
+
   overflow: hidden;
+
   transform-style: preserve-3d;
+
   backface-visibility: hidden;
-  will-change:
-    transform,
-    opacity;
+
+  will-change: transform, opacity;
 }
 
 .leftDoor {
@@ -242,31 +289,41 @@
 .rightImage {
   position: absolute;
   top: 0;
+
   width: 200%;
   height: 100%;
+
   background-color: #eee7dd;
   background-image:
     url("/images/convite-fechado.png");
+
   background-repeat: no-repeat;
   background-size: 100% 100%;
+
+  pointer-events: none;
 }
 
 .leftImage {
   left: 0;
+
   background-position: left center;
 }
 
 .rightImage {
   right: 0;
+
   background-position: right center;
 }
 
 .leftShadow,
 .rightShadow {
   position: absolute;
-  inset: 0;
   z-index: 2;
+
+  inset: 0;
+
   opacity: 0;
+
   pointer-events: none;
 }
 
@@ -275,8 +332,7 @@
     linear-gradient(
       90deg,
       transparent 58%,
-      rgba(37, 20, 15, 0.46)
-      100%
+      rgba(37, 20, 15, 0.46) 100%
     );
 }
 
@@ -284,8 +340,7 @@
   background:
     linear-gradient(
       90deg,
-      rgba(37, 20, 15, 0.46)
-      0%,
+      rgba(37, 20, 15, 0.46) 0%,
       transparent 42%
     );
 }
@@ -295,21 +350,29 @@
 .introduction {
   position: absolute;
   z-index: 30;
+
   top: max(
     26px,
     env(safe-area-inset-top)
   );
+
   left: 50%;
-  width: calc(100% - 100px);
-  transform: translateX(-50%);
+
   display: flex;
-  flex-direction: column;
+  width: calc(100% - 100px);
+
   align-items: center;
+  flex-direction: column;
+
+  transform: translateX(-50%);
+
   color: #65564b;
   text-align: center;
+
   text-shadow:
-    0 1px 2px
-    rgba(255, 255, 255, 0.8);
+    0 1px 2px rgba(255, 255, 255, 0.8);
+
+  pointer-events: none;
 }
 
 .introduction > span {
@@ -317,31 +380,31 @@
     Georgia,
     "Times New Roman",
     serif;
-  font-size: clamp(
-    10px,
-    2.8vw,
-    15px
-  );
+
+  font-size: clamp(10px, 2.8vw, 15px);
+
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
 .scrollMessage {
-  margin-top: 9px;
   display: flex;
-  flex-direction: column;
+
+  margin-top: 9px;
+
   align-items: center;
+  flex-direction: column;
   gap: 2px;
+
   animation:
-    floating
-    1.8s
-    ease-in-out
-    infinite;
+    floating 1.8s ease-in-out infinite;
 }
 
 .scrollMessage p {
   margin: 0;
+
   font-size: 10px;
+
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
@@ -351,31 +414,45 @@
 .soundButton {
   position: absolute;
   z-index: 40;
+
   top: max(
     22px,
     env(safe-area-inset-top)
   );
+
   right: max(
     20px,
     env(safe-area-inset-right)
   );
+
+  display: grid;
+
   width: 42px;
   height: 42px;
+
   padding: 0;
+
+  place-items: center;
+
+  color: #5e4d42;
+
   border:
     1px solid
     rgba(100, 76, 60, 0.22);
+
   border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: #5e4d42;
+
   background:
     rgba(255, 253, 248, 0.72);
+
   box-shadow:
     0 5px 20px
     rgba(68, 45, 31, 0.08);
+
   backdrop-filter: blur(12px);
+
   cursor: pointer;
+
   transition:
     transform 180ms ease,
     background 180ms ease;
@@ -383,6 +460,7 @@
 
 .soundButton:hover {
   transform: scale(1.06);
+
   background:
     rgba(255, 253, 248, 0.92);
 }
@@ -392,22 +470,33 @@
 .progress {
   position: absolute;
   z-index: 35;
+
   top: 50%;
   right: 13px;
+
   width: 2px;
   height: 110px;
+
   overflow: hidden;
+
   border-radius: 999px;
+
   transform: translateY(-50%);
+
   background:
     rgba(91, 68, 51, 0.14);
+
+  pointer-events: none;
 }
 
 .progressLine {
   display: block;
+
   width: 100%;
   height: 100%;
+
   background: #852332;
+
   transform: scaleY(0);
   transform-origin: top center;
 }
@@ -438,16 +527,13 @@
   }
 }
 
-@media (
-  orientation: landscape
-) and (max-height: 650px) {
+@media (orientation: landscape) and (max-height: 650px) {
   .names h1 {
-    font-size:
-      clamp(
-        48px,
-        11vh,
-        80px
-      );
+    font-size: clamp(
+      48px,
+      11vh,
+      80px
+    );
   }
 
   .subtitle {
@@ -456,6 +542,7 @@
 
   .ampersand {
     margin: 7px 0;
+
     font-size: 32px;
   }
 
