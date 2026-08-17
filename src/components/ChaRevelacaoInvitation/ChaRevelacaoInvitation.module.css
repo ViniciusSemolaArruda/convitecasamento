@@ -1,0 +1,63 @@
+.invitation { --blue:#76bde9; --blue-dark:#3a86b8; --pink:#ee9fbd; --pink-dark:#c75f8b; --ink:#524657; width:100%; overflow:hidden; color:var(--ink); background:#fff9fc; font-family:Arial,sans-serif; }
+.hero { position:relative; min-height:100svh; display:grid; place-items:center; overflow:hidden; }
+.heroVideo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.heroOverlay { position:absolute; inset:0; background:linear-gradient(180deg,rgba(33,52,67,.18),rgba(68,37,59,.2) 50%,rgba(42,35,50,.56)),linear-gradient(90deg,rgba(106,185,231,.16),rgba(239,157,189,.16)); }
+.heroContent { position:relative; z-index:2; width:min(92%,800px); padding:28px; text-align:center; color:#fff; text-shadow:0 3px 22px rgba(48,30,46,.6); }
+.emojiLine { display:block; font-size:clamp(1.3rem,3vw,2rem); margin-bottom:16px; }
+.heroContent>p { margin:0 0 14px; letter-spacing:.18em; text-transform:uppercase; font-size:clamp(.72rem,2vw,.92rem); font-weight:700; }
+.heroContent h1 { margin:0; font-family:Georgia,serif; font-size:clamp(3.4rem,12vw,8.5rem); line-height:.78; font-weight:400; }
+.heroContent h1 span,.heroContent h1 strong { display:block; font-weight:400; }
+.heroContent h1 span { color:#bfe9ff; }
+.heroContent h1 strong { color:#ffd1e2; }
+.heroContent h1 i { display:block; margin:13px 0 9px; color:#fff; font-size:.25em; font-weight:400; }
+.heroContent small { font:italic clamp(1rem,2.3vw,1.35rem) Georgia,serif; }
+.heartLine { display:flex; justify-content:center; align-items:center; gap:10px; margin:24px auto 15px; color:#fff; }
+.heartLine span { width:70px; height:1px; background:currentColor; opacity:.7; }
+.soundButton,.downButton { position:absolute; z-index:3; border:1px solid rgba(255,255,255,.65); color:#fff; background:rgba(39,37,47,.25); backdrop-filter:blur(10px); cursor:pointer; }
+.soundButton { top:max(18px,env(safe-area-inset-top)); right:18px; display:grid; place-items:center; width:43px; height:43px; border-radius:50%; }
+.downButton { bottom:max(22px,env(safe-area-inset-bottom)); left:50%; display:grid; place-items:center; width:46px; height:46px; border-radius:50%; transform:translateX(-50%); animation:bob 1.8s ease-in-out infinite; }
+.intro,.namesSection,.voteSection { padding:clamp(72px,10vw,130px) max(22px,5vw); }
+.intro { text-align:center; background:radial-gradient(circle at 15% 20%,rgba(118,189,233,.16),transparent 30%),radial-gradient(circle at 85% 80%,rgba(238,159,189,.18),transparent 30%),#fffafc; }
+.sectionEmoji { font-size:1.7rem; }
+.script { margin:14px 0 8px; color:var(--pink-dark); font:italic clamp(1.7rem,4vw,2.7rem) Georgia,serif; }
+.intro h2,.heading h2,.voteCard h2 { margin:0 auto; max-width:760px; font:400 clamp(1.8rem,5vw,3.2rem)/1.14 Georgia,serif; }
+.divider { display:flex; align-items:center; justify-content:center; gap:12px; margin:25px auto; color:var(--blue-dark); }
+.divider span { width:80px; height:1px; background:linear-gradient(90deg,transparent,currentColor); }
+.divider span:last-child { background:linear-gradient(90deg,currentColor,transparent); }
+.intro>p:last-child { max-width:700px; margin:0 auto; font:400 clamp(1rem,2vw,1.17rem)/1.85 Georgia,serif; color:#756778; }
+.namesSection { background:linear-gradient(110deg,#edf8ff 0%,#fff 48%,#fff0f6 100%); }
+.heading { text-align:center; margin-bottom:48px; }
+.heading .script { color:var(--blue-dark); }
+.nameCards { position:relative; display:grid; grid-template-columns:1fr 1fr; gap:26px; max-width:900px; margin:auto; }
+.nameCard { min-height:290px; padding:42px 24px; border-radius:34px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; box-shadow:0 20px 50px rgba(91,69,88,.1); }
+.nameCard>span { font-size:2rem; }
+.nameCard small { margin-top:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; }
+.nameCard h3 { margin:8px 0; font:400 clamp(3.5rem,8vw,6rem) Georgia,serif; }
+.nameCard p { margin:0; font:italic 1rem Georgia,serif; }
+.boyCard { border:1px solid #c6e7fb; color:#347ca9; background:rgba(239,249,255,.88); }
+.girlCard { border:1px solid #f6cddd; color:#b94f7b; background:rgba(255,241,247,.9); }
+.orBubble { position:absolute; z-index:2; top:50%; left:50%; display:grid; place-items:center; width:54px; height:54px; border-radius:50%; transform:translate(-50%,-50%); color:#8e7181; background:#fff; box-shadow:0 8px 25px rgba(70,51,64,.14); font:italic 1rem Georgia,serif; }
+.voteSection { background:linear-gradient(135deg,#dff3ff,#fff8fc 50%,#fbdce8); }
+.voteCard { max-width:820px; margin:auto; padding:clamp(32px,6vw,65px); border:1px solid rgba(255,255,255,.9); border-radius:36px; text-align:center; background:rgba(255,255,255,.72); box-shadow:0 25px 70px rgba(78,71,96,.12); backdrop-filter:blur(15px); }
+.voteCard>svg { color:#af75a1; }
+.voteHint { max-width:570px; margin:17px auto 27px; color:#796d7b; line-height:1.65; }
+.voteButtons { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.voteButtons button { min-height:58px; padding:14px 20px; border:0; border-radius:18px; color:#fff; cursor:pointer; font-weight:800; font-size:.96rem; transition:transform .2s,filter .2s; }
+.voteButtons button:hover { transform:translateY(-2px); filter:brightness(1.04); }
+.voteButtons button:disabled { cursor:default; opacity:.75; transform:none; }
+.boyButton { background:linear-gradient(135deg,#60afe2,#3d8dbf); }
+.girlButton { background:linear-gradient(135deg,#ee9fbd,#cb668f); }
+.results { display:grid; grid-template-rows:0fr; opacity:0; transition:.5s ease; }
+.results>* { overflow:hidden; }
+.resultsVisible { grid-template-rows:auto; opacity:1; margin-top:28px; }
+.resultLabels { display:flex; justify-content:space-between; color:#68606c; margin-bottom:10px; }
+.resultLabels strong:first-child { color:var(--blue-dark); }.resultLabels strong:last-child { color:var(--pink-dark); }
+.progress { display:flex; width:100%; height:18px; overflow:hidden; border-radius:999px; background:#eee; box-shadow:inset 0 2px 5px rgba(0,0,0,.08); }
+.boyProgress,.girlProgress { height:100%; transition:width .7s ease; }.boyProgress { background:var(--blue); }.girlProgress { background:var(--pink); }
+.results small { display:block; margin-top:10px; color:#8d828f; }
+.footer { padding:80px 24px max(70px,calc(env(safe-area-inset-bottom) + 55px)); text-align:center; color:#fff; background:linear-gradient(120deg,#65acd9,#ac83ae 50%,#df86aa); }
+.footer>span { font-size:1.5rem; }.footer p { margin:18px 0 8px; font:italic 1.05rem Georgia,serif; }.footer h2 { margin:0 0 16px; font:400 clamp(2.6rem,7vw,5rem) Georgia,serif; }.footer h2 i { font-size:.4em; }.footer small { font-size:.9rem; }
+.reveal { opacity:0; transform:translateY(34px); transition:opacity .75s ease,transform .75s ease; }.visible { opacity:1; transform:none; }
+@keyframes bob { 50% { transform:translate(-50%,8px); } }
+@media(max-width:650px){ .heroContent{padding:18px}.nameCards{grid-template-columns:1fr;gap:18px}.orBubble{top:50%;}.nameCard{min-height:230px}.voteButtons{grid-template-columns:1fr}.intro,.namesSection,.voteSection{padding-left:18px;padding-right:18px}.voteCard{border-radius:26px}.heroVideo{object-position:center} }
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.downButton{animation:none}.voteButtons button{transition:none}}
