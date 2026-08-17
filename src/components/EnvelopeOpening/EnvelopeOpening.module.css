@@ -1,0 +1,403 @@
+.opening {
+  position: fixed;
+  z-index: 9999;
+
+  inset: 0;
+
+  width: 100vw;
+
+  height: 100vh;
+  height: 100dvh;
+
+  overflow: hidden;
+
+  color: #5b4437;
+
+  background: #eee5d9;
+
+  isolation: isolate;
+
+  transition:
+    opacity 900ms ease,
+    visibility 900ms ease,
+    filter 900ms ease,
+    transform 1100ms
+      cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+.openingLeaving {
+  opacity: 0;
+
+  visibility: hidden;
+
+  transform: scale(1.035);
+
+  filter: blur(8px);
+
+  pointer-events: none;
+}
+
+.video {
+  position: absolute;
+  z-index: 1;
+
+  inset: 0;
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  background: #eee5d9;
+
+  pointer-events: none;
+
+  user-select: none;
+
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.videoOverlay {
+  position: absolute;
+  z-index: 2;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.04),
+      transparent 27%,
+      transparent 72%,
+      rgba(68, 43, 31, 0.06)
+    );
+
+  pointer-events: none;
+
+  transition:
+    opacity 500ms ease;
+}
+
+.openingPlaying .videoOverlay {
+  opacity: 0.25;
+}
+
+.edgeShadow {
+  position: absolute;
+  z-index: 3;
+
+  inset: 0;
+
+  box-shadow:
+    inset 0 0 70px
+    rgba(58, 35, 25, 0.11);
+
+  pointer-events: none;
+}
+
+/* Botão invisível de tela inteira */
+
+.openButton {
+  position: absolute;
+  z-index: 10;
+
+  inset: 0;
+
+  display: flex;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 0 25px
+    max(
+      35px,
+      env(safe-area-inset-bottom)
+    );
+
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+
+  color: #5c4438;
+
+  border: 0;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+.openButton:disabled {
+  cursor: progress;
+}
+
+.touchArea {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 130px;
+  height: 130px;
+
+  transform:
+    translate(-50%, -50%);
+
+  border-radius: 50%;
+}
+
+.firstPulse,
+.secondPulse {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 92px;
+  height: 92px;
+
+  transform:
+    translate(-50%, -50%)
+    scale(0.7);
+
+  border:
+    1px solid
+    rgba(178, 126, 57, 0.48);
+
+  border-radius: 50%;
+
+  opacity: 0;
+
+  animation:
+    sealPulse 2.5s ease-out
+    infinite;
+
+  pointer-events: none;
+}
+
+.secondPulse {
+  animation-delay: 1.2s;
+}
+
+.openButton strong {
+  position: relative;
+
+  margin-bottom: 9px;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+
+  text-shadow:
+    0 1px
+    rgba(255, 255, 255, 0.85);
+
+  animation:
+    instructionFloating
+    2s ease-in-out infinite;
+}
+
+.openButton small {
+  position: relative;
+
+  color:
+    rgba(92, 68, 56, 0.67);
+
+  font:
+    italic 12px Georgia,
+    "Times New Roman",
+    serif;
+
+  letter-spacing: 0.06em;
+}
+
+.openingText {
+  position: absolute;
+  z-index: 8;
+
+  right: 50%;
+
+  bottom: max(
+    28px,
+    env(safe-area-inset-bottom)
+  );
+
+  margin: 0;
+
+  transform: translateX(50%);
+
+  color:
+    rgba(89, 66, 53, 0.68);
+
+  font-size: 8px;
+
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+
+  animation:
+    openingTextPulse
+    1.5s ease-in-out infinite;
+
+  pointer-events: none;
+}
+
+/* Linha de progresso */
+
+.loadingLine {
+  position: absolute;
+  z-index: 12;
+
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  height: 2px;
+
+  overflow: hidden;
+
+  background:
+    rgba(103, 76, 57, 0.08);
+
+  pointer-events: none;
+}
+
+.loadingLine span {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  transform:
+    scaleX(0);
+
+  transform-origin:
+    left center;
+
+  background:
+    linear-gradient(
+      90deg,
+      #a57035,
+      #d2aa6a,
+      #a57035
+    );
+}
+
+.openingPlaying .loadingLine span {
+  animation:
+    loadingProgress 4.5s
+    linear forwards;
+}
+
+@keyframes sealPulse {
+  0% {
+    opacity: 0.65;
+
+    transform:
+      translate(-50%, -50%)
+      scale(0.66);
+  }
+
+  75%,
+  100% {
+    opacity: 0;
+
+    transform:
+      translate(-50%, -50%)
+      scale(1.46);
+  }
+}
+
+@keyframes instructionFloating {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@keyframes openingTextPulse {
+  0%,
+  100% {
+    opacity: 0.48;
+  }
+
+  50% {
+    opacity: 0.94;
+  }
+}
+
+@keyframes loadingProgress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (min-width: 768px) {
+  .opening {
+    right: auto;
+    left: 50%;
+
+    width: min(
+      100vw,
+      760px
+    );
+
+    transform:
+      translateX(-50%);
+
+    box-shadow:
+      0 0 90px
+      rgba(52, 30, 21, 0.2);
+  }
+
+  .openingLeaving {
+    transform:
+      translateX(-50%)
+      scale(1.035);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 650px) {
+  .opening {
+    width: min(
+      56.25vh,
+      760px
+    );
+  }
+
+  .openButton {
+    padding-bottom: 18px;
+  }
+
+  .openingText {
+    bottom: 17px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .firstPulse,
+  .secondPulse,
+  .openButton strong,
+  .openingText {
+    animation: none;
+  }
+}
