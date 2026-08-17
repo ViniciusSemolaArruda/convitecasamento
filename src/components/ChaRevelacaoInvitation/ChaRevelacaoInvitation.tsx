@@ -1,7 +1,17 @@
 "use client";
 
-import { Baby, ChevronDown, Heart, Sparkles, Volume2, VolumeX } from "lucide-react";
+import {
+  Baby,
+  ChevronDown,
+  Heart,
+  QrCode,
+  Sparkles,
+  UserRound,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import styles from "./ChaRevelacaoInvitation.module.css";
 
 type Choice = "joao" | "maria";
@@ -94,6 +104,30 @@ export default function ChaRevelacaoInvitation() {
         <p>Tem um coraçãozinho crescendo e enchendo nossos dias de sonhos. Ainda não sabemos se nosso mundo ficará mais azul ou mais rosa, mas já sabemos que esse bebê é profundamente amado.</p>
       </section>
 
+      <section className={styles.guestSection}>
+        <article className={`${styles.guestCard} ${styles.reveal}`} data-reveal>
+          <div className={styles.guestIcon}>
+            <UserRound size={25} strokeWidth={1.5} />
+          </div>
+
+          <p className={styles.script}>Nosso convidado especial</p>
+          <span className={styles.guestLabel}>Este convite pertence a</span>
+          <h2>Vinicius Semola Arruda</h2>
+
+          <div className={styles.guestDivider} aria-hidden="true">
+            <span />
+            <Heart size={15} fill="currentColor" />
+            <span />
+          </div>
+
+          <p className={styles.guestMessage}>
+            Vinicius, queremos você ao nosso lado para compartilhar a emoção
+            desta descoberta. Sua presença tornará esse momento ainda mais
+            alegre, especial e cheio de boas lembranças para a nossa família.
+          </p>
+        </article>
+      </section>
+
       <section className={styles.namesSection}>
         <div className={`${styles.heading} ${styles.reveal}`} data-reveal>
           <p className={styles.script}>Quem será?</p>
@@ -132,6 +166,36 @@ export default function ChaRevelacaoInvitation() {
             <small>Resultado ilustrativo atualizado com o seu palpite</small>
           </div>
         </div>
+      </section>
+
+      <section className={styles.accessSection}>
+        <article className={`${styles.accessCard} ${styles.reveal}`} data-reveal>
+          <div className={styles.qrIcon}>
+            <QrCode size={27} strokeWidth={1.5} />
+          </div>
+
+          <p className={styles.script}>Seu acesso ao chá revelação</p>
+          <h2>Apresente este QR Code na entrada</h2>
+
+          <div className={styles.qrBox}>
+            <span className={styles.scanLine} aria-hidden="true" />
+            <QRCodeSVG
+              value="CHA-REVELACAO-JOAO-OU-MARIA-VINICIUS-SEMOLA-ARRUDA"
+              size={190}
+              bgColor="#ffffff"
+              fgColor="#69556b"
+              level="H"
+              marginSize={1}
+            />
+          </div>
+
+          <strong className={styles.accessName}>Vinicius Semola Arruda</strong>
+          <small className={styles.accessNumber}>Convite individual • Nº 001</small>
+          <p className={styles.accessText}>
+            Este QR Code é pessoal e deverá ser apresentado na recepção para
+            validar a sua entrada no evento.
+          </p>
+        </article>
       </section>
 
       <footer className={styles.footer}>
