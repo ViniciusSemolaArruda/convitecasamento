@@ -2,34 +2,55 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronDown } from "lucide-react";
-import { useRef } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import styles from "./InvitationOpening.module.css";
 
-gsap.registerPlugin(
-  ScrollTrigger,
-  useGSAP,
-);
+gsap.registerPlugin(useGSAP);
+
+/*
+ * Quantidade aproximada de movimento necessária
+ * para concluir toda a abertura.
+ */
+const OPENING_DISTANCE = 1750;
 
 export default function InvitationOpening() {
   const sectionRef =
     useRef<HTMLElement>(null);
 
-  const stickyRef =
-    useRef<HTMLDivElement>(null);
-
   const sceneRef =
     useRef<HTMLDivElement>(null);
 
+  const timelineRef =
+    useRef<gsap.core.Timeline | null>(
+      null,
+    );
+
+  const progressTweenRef =
+    useRef<gsap.core.Tween | null>(null);
+
+  const progressRef = useRef(0);
+  const lastTouchYRef =
+    useRef<number | null>(null);
+
+  const releasedRef = useRef(false);
+
+  const restoreScrollRef =
+    useRef<(() => void) | null>(null);
+
+  const [isComplete, setIsComplete] =
+    useState(false);
+
   useGSAP(
     () => {
-      const section = sectionRef.current;
-      const sticky = stickyRef.current;
       const scene = sceneRef.current;
 
-      if (!section || !sticky || !scene) {
+      if (!scene) {
         return;
       }
 
@@ -87,27 +108,10 @@ export default function InvitationOpening() {
       });
 
       const timeline = gsap.timeline({
+        paused: true,
+
         defaults: {
           ease: "none",
-        },
-
-        scrollTrigger: {
-          id: "invitation-opening",
-
-          trigger: section,
-          start: "top top",
-
-          end: () =>
-            `+=${window.innerHeight * 5}`,
-
-          scrub: 1.15,
-
-          pin: sticky,
-          pinSpacing: true,
-
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          fastScrollEnd: false,
         },
       });
 
@@ -282,34 +286,14 @@ export default function InvitationOpening() {
           4.3,
         );
 
-      const handleOrientationChange = () => {
-        window.setTimeout(() => {
-          ScrollTrigger.refresh();
-        }, 250);
-      };
-
-      window.addEventListener(
-        "orientationchange",
-        handleOrientationChange,
-      );
-
-      const refreshTimer = window.setTimeout(
-        () => {
-          ScrollTrigger.refresh();
-        },
-        100,
-      );
+      timelineRef.current = timeline;
 
       return () => {
-        window.clearTimeout(refreshTimer);
-
-        window.removeEventListener(
-          "orientationchange",
-          handleOrientationChange,
-        );
-
-        timeline.scrollTrigger?.kill();
+        progressTweenRef.current?.kill();
         timeline.kill();
+
+        progressTweenRef.current = null;
+        timelineRef.current = null;
       };
     },
     {
@@ -319,17 +303,325 @@ export default function InvitationOpening() {
     },
   );
 
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+
+    const previousHtmlOverflow =
+      html.style.overflow;
+
+    const previousBodyOverflow =
+      body.style.overflow;
+
+    const previousHtmlOverscroll =
+      html.style.overscrollBehavior;
+
+    const previousBodyOverscroll =
+      body.style.overscrollBehavior;
+
+    const previousHtmlScrollBehavior =
+      html.style.scrollBehavior;
+
+    /*
+     * Garante que a experiência sempre
+     * comece no topo.
+     */
+    html.style.scrollBehavior = "auto";
+    window.scrollTo(0, 0);
+
+    /*
+     * Bloqueio real da página.
+     */
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+
+    html.style.overscrollBehavior = "none";
+    body.style.overscrollBehavior = "none";
+
+    function restoreScroll() {
+      html.style.overflow =
+        previousHtmlOverflow;
+
+      body.style.overflow =
+        previousBodyOverflow;
+
+      html.style.overscrollBehavior =
+        previousHtmlOverscroll;
+
+      body.style.overscrollBehavior =
+        previousBodyOverscroll;
+
+      html.style.scrollBehavior =
+        previousHtmlScrollBehavior;
+    }
+
+    restoreScrollRef.current =
+      restoreScroll;
+
+    function finishOpening() {
+      if (releasedRef.current) {
+        return;
+      }
+
+      releasedRef.current = true;
+      progressRef.current = 1;
+
+      progressTweenRef.current?.kill();
+
+      timelineRef.current?.progress(1);
+      timelineRef.current?.pause();
+
+      setIsComplete(true);
+      restoreScroll();
+    }
+
+    function updateProgress(
+      movement: number,
+    ) {
+      if (
+        releasedRef.current ||
+        !timelineRef.current
+      ) {
+        return;
+      }
+
+      /*
+       * Movimento para cima avança.
+       * Movimento para baixo volta a animação.
+       */
+      const nextProgress = gsap.utils.clamp(
+        0,
+        1,
+        progressRef.current +
+          movement / OPENING_DISTANCE,
+      );
+
+      progressRef.current =
+        nextProgress;
+
+      progressTweenRef.current?.kill();
+
+      progressTweenRef.current = gsap.to(
+        timelineRef.current,
+        {
+          progress: nextProgress,
+          duration: 0.28,
+          ease: "power2.out",
+          overwrite: true,
+
+          onComplete: () => {
+            if (nextProgress >= 0.999) {
+              finishOpening();
+            }
+          },
+        },
+      );
+    }
+
+    function handleWheel(
+      event: WheelEvent,
+    ) {
+      if (releasedRef.current) {
+        return;
+      }
+
+      event.preventDefault();
+
+      /*
+       * Limita rodas e trackpads muito rápidos.
+       */
+      const movement = gsap.utils.clamp(
+        -120,
+        120,
+        event.deltaY,
+      );
+
+      updateProgress(movement);
+    }
+
+    function handleTouchStart(
+      event: TouchEvent,
+    ) {
+      if (releasedRef.current) {
+        return;
+      }
+
+      const touch = event.touches[0];
+
+      if (!touch) {
+        return;
+      }
+
+      lastTouchYRef.current =
+        touch.clientY;
+    }
+
+    function handleTouchMove(
+      event: TouchEvent,
+    ) {
+      if (releasedRef.current) {
+        return;
+      }
+
+      event.preventDefault();
+
+      const touch = event.touches[0];
+
+      if (
+        !touch ||
+        lastTouchYRef.current === null
+      ) {
+        return;
+      }
+
+      /*
+       * Arrastar o dedo para cima gera
+       * movimento positivo.
+       */
+      const movement =
+        lastTouchYRef.current -
+        touch.clientY;
+
+      lastTouchYRef.current =
+        touch.clientY;
+
+      updateProgress(movement);
+    }
+
+    function handleTouchEnd() {
+      lastTouchYRef.current = null;
+    }
+
+    function handleKeyDown(
+      event: KeyboardEvent,
+    ) {
+      if (releasedRef.current) {
+        return;
+      }
+
+      const forwardKeys = [
+        "ArrowDown",
+        "PageDown",
+        " ",
+        "Enter",
+      ];
+
+      const backwardKeys = [
+        "ArrowUp",
+        "PageUp",
+      ];
+
+      if (
+        forwardKeys.includes(event.key)
+      ) {
+        event.preventDefault();
+        updateProgress(120);
+      }
+
+      if (
+        backwardKeys.includes(event.key)
+      ) {
+        event.preventDefault();
+        updateProgress(-120);
+      }
+    }
+
+    window.addEventListener(
+      "wheel",
+      handleWheel,
+      {
+        passive: false,
+      },
+    );
+
+    window.addEventListener(
+      "touchstart",
+      handleTouchStart,
+      {
+        passive: false,
+      },
+    );
+
+    window.addEventListener(
+      "touchmove",
+      handleTouchMove,
+      {
+        passive: false,
+      },
+    );
+
+    window.addEventListener(
+      "touchend",
+      handleTouchEnd,
+    );
+
+    window.addEventListener(
+      "touchcancel",
+      handleTouchEnd,
+    );
+
+    window.addEventListener(
+      "keydown",
+      handleKeyDown,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "wheel",
+        handleWheel,
+      );
+
+      window.removeEventListener(
+        "touchstart",
+        handleTouchStart,
+      );
+
+      window.removeEventListener(
+        "touchmove",
+        handleTouchMove,
+      );
+
+      window.removeEventListener(
+        "touchend",
+        handleTouchEnd,
+      );
+
+      window.removeEventListener(
+        "touchcancel",
+        handleTouchEnd,
+      );
+
+      window.removeEventListener(
+        "keydown",
+        handleKeyDown,
+      );
+
+      progressTweenRef.current?.kill();
+
+      restoreScroll();
+      restoreScrollRef.current = null;
+    };
+  }, []);
+
   return (
     <section
       ref={sectionRef}
-      className={styles.section}
+      className={`${styles.section} ${
+        isComplete
+          ? styles.sectionComplete
+          : ""
+      }`}
     >
       <div
-        ref={stickyRef}
-        className={styles.sticky}
+        className={`${styles.sticky} ${
+          isComplete
+            ? styles.stickyComplete
+            : ""
+        }`}
       >
         <div
           className={styles.backgroundGlow}
+          aria-hidden="true"
         />
 
         <div className={styles.introduction}>
@@ -338,7 +630,9 @@ export default function InvitationOpening() {
           </span>
 
           <div className={styles.scrollMessage}>
-            <p>Role para abrir</p>
+            <p>
+              Arraste para abrir
+            </p>
 
             <ChevronDown
               size={18}
@@ -352,10 +646,14 @@ export default function InvitationOpening() {
           className={styles.scene}
         >
           <div
-            className={styles.openInvitation}
+            className={
+              styles.openInvitation
+            }
           >
             <div
-              className={styles.namesContent}
+              className={
+                styles.namesContent
+              }
             >
               <p className={styles.subtitle}>
                 O casamento de
@@ -363,19 +661,25 @@ export default function InvitationOpening() {
 
               <div className={styles.names}>
                 <h1
-                  className={styles.firstName}
+                  className={
+                    styles.firstName
+                  }
                 >
                   Mylena
                 </h1>
 
                 <span
-                  className={styles.ampersand}
+                  className={
+                    styles.ampersand
+                  }
                 >
                   &amp;
                 </span>
 
                 <h1
-                  className={styles.secondName}
+                  className={
+                    styles.secondName
+                  }
                 >
                   Nerivaldo
                 </h1>
@@ -414,7 +718,9 @@ export default function InvitationOpening() {
             />
 
             <div
-              className={styles.leftShadow}
+              className={
+                styles.leftShadow
+              }
             />
           </div>
 
@@ -422,18 +728,27 @@ export default function InvitationOpening() {
             className={`${styles.door} ${styles.rightDoor}`}
           >
             <div
-              className={styles.rightImage}
+              className={
+                styles.rightImage
+              }
             />
 
             <div
-              className={styles.rightShadow}
+              className={
+                styles.rightShadow
+              }
             />
           </div>
         </div>
 
-        <div className={styles.progress}>
+        <div
+          className={styles.progress}
+          aria-hidden="true"
+        >
           <span
-            className={styles.progressLine}
+            className={
+              styles.progressLine
+            }
           />
         </div>
       </div>

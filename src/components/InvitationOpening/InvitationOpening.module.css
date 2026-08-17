@@ -1,23 +1,27 @@
 .section {
   position: relative;
+
   width: 100%;
 
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
+
+  overflow: hidden;
 
   background: #e9e0d4;
+}
+
+.sectionComplete {
+  overflow: visible;
 }
 
 .sticky {
   position: relative;
 
   display: flex;
+
   width: 100%;
 
-  /*
-   * 100vh funciona como fallback.
-   * 100dvh acompanha a altura do celular.
-   */
   height: 100vh;
   height: 100dvh;
 
@@ -38,10 +42,27 @@
     #e9e0d4;
 
   perspective: 1800px;
+
+  /*
+   * Enquanto a abertura não termina,
+   * o gesto controla somente a timeline.
+   */
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+.stickyComplete {
+  /*
+   * Depois da abertura, o navegador volta
+   * a controlar normalmente o gesto.
+   */
+  touch-action: pan-y;
+  overscroll-behavior: auto;
 }
 
 .backgroundGlow {
   position: absolute;
+
   top: 50%;
   left: 50%;
 
@@ -52,7 +73,8 @@
 
   transform: translate(-50%, -50%);
 
-  background: rgba(255, 253, 248, 0.58);
+  background:
+    rgba(255, 253, 248, 0.58);
 
   filter: blur(80px);
 
@@ -75,10 +97,11 @@
   will-change: transform;
 }
 
-/* Imagem do convite aberto */
+/* Convite aberto */
 
 .openInvitation {
   position: absolute;
+
   inset: 0;
 
   overflow: hidden;
@@ -101,6 +124,7 @@
 
   position: absolute;
   z-index: 1;
+
   inset: 0;
 
   pointer-events: none;
@@ -121,7 +145,7 @@
     );
 }
 
-/* Conteúdo central */
+/* Conteúdo dos nomes */
 
 .namesContent {
   position: absolute;
@@ -131,31 +155,50 @@
   left: 50%;
 
   display: flex;
-  width: min(76vw, 560px);
+
+  width: min(
+    76vw,
+    560px
+  );
 
   align-items: center;
   flex-direction: column;
 
-  transform: translate(-50%, -50%);
+  transform:
+    translate(-50%, -50%);
 
   color: #4d4037;
+
   text-align: center;
 
   pointer-events: none;
 }
 
 .subtitle {
-  margin: 0 0 clamp(24px, 4vh, 42px);
+  margin:
+    0 0
+    clamp(
+      24px,
+      4vh,
+      42px
+    );
 
   font-family:
     Arial,
     Helvetica,
     sans-serif;
 
-  font-size: clamp(10px, 2.8vw, 15px);
+  font-size:
+    clamp(
+      10px,
+      2.8vw,
+      15px
+    );
+
   font-weight: 400;
 
   letter-spacing: 0.34em;
+
   text-transform: uppercase;
 }
 
@@ -174,29 +217,44 @@
     Times,
     serif;
 
-  font-size: clamp(58px, 16vw, 128px);
+  font-size:
+    clamp(
+      58px,
+      16vw,
+      128px
+    );
+
   font-weight: 400;
   font-style: italic;
 
   line-height: 0.84;
+
   letter-spacing: -0.065em;
 
   text-shadow:
-    0 2px 2px rgba(88, 58, 41, 0.08);
+    0 2px 2px
+    rgba(88, 58, 41, 0.08);
 }
 
 .firstName,
 .secondName {
   opacity: 0;
 
-  transform: translateY(25px);
+  transform:
+    translateY(25px);
 }
 
 .ampersand {
   position: relative;
   z-index: 2;
 
-  margin: clamp(12px, 2.5vh, 24px) 0;
+  margin:
+    clamp(
+      12px,
+      2.5vh,
+      24px
+    )
+    0;
 
   color: #861f2c;
 
@@ -205,28 +263,47 @@
     "Times New Roman",
     serif;
 
-  font-size: clamp(32px, 8vw, 58px);
+  font-size:
+    clamp(
+      32px,
+      8vw,
+      58px
+    );
+
   font-weight: 400;
   font-style: italic;
 }
 
 .decorativeLine {
   display: flex;
-  width: min(70%, 270px);
 
-  margin-top: clamp(30px, 5vh, 55px);
+  width: min(
+    70%,
+    270px
+  );
+
+  margin-top:
+    clamp(
+      30px,
+      5vh,
+      55px
+    );
 
   align-items: center;
+
   gap: 14px;
 
   color: #8a2430;
 
   opacity: 0;
-  transform: scaleX(0.35);
+
+  transform:
+    scaleX(0.35);
 }
 
 .decorativeLine span {
   height: 1px;
+
   flex: 1;
 
   background: currentColor;
@@ -243,21 +320,33 @@
 }
 
 .bottomMessage {
-  margin: clamp(20px, 3vh, 32px) 0 0;
+  margin:
+    clamp(
+      20px,
+      3vh,
+      32px
+    )
+    0 0;
 
   font-family:
     Georgia,
     "Times New Roman",
     serif;
 
-  font-size: clamp(13px, 3.2vw, 18px);
+  font-size:
+    clamp(
+      13px,
+      3.2vw,
+      18px
+    );
+
   font-weight: 400;
   font-style: italic;
 
   letter-spacing: 0.04em;
 }
 
-/* Duas metades do convite */
+/* Duas metades */
 
 .door {
   position: absolute;
@@ -274,7 +363,9 @@
 
   backface-visibility: hidden;
 
-  will-change: transform, opacity;
+  will-change:
+    transform,
+    opacity;
 }
 
 .leftDoor {
@@ -288,6 +379,7 @@
 .leftImage,
 .rightImage {
   position: absolute;
+
   top: 0;
 
   width: 200%;
@@ -306,13 +398,15 @@
 .leftImage {
   left: 0;
 
-  background-position: left center;
+  background-position:
+    left center;
 }
 
 .rightImage {
   right: 0;
 
-  background-position: right center;
+  background-position:
+    right center;
 }
 
 .leftShadow,
@@ -332,7 +426,8 @@
     linear-gradient(
       90deg,
       transparent 58%,
-      rgba(37, 20, 15, 0.46) 100%
+      rgba(37, 20, 15, 0.46)
+        100%
     );
 }
 
@@ -340,12 +435,13 @@
   background:
     linear-gradient(
       90deg,
-      rgba(37, 20, 15, 0.46) 0%,
+      rgba(37, 20, 15, 0.46)
+        0%,
       transparent 42%
     );
 }
 
-/* Instrução inicial */
+/* Instrução */
 
 .introduction {
   position: absolute;
@@ -359,18 +455,23 @@
   left: 50%;
 
   display: flex;
-  width: calc(100% - 100px);
+
+  width:
+    calc(100% - 100px);
 
   align-items: center;
   flex-direction: column;
 
-  transform: translateX(-50%);
+  transform:
+    translateX(-50%);
 
   color: #65564b;
+
   text-align: center;
 
   text-shadow:
-    0 1px 2px rgba(255, 255, 255, 0.8);
+    0 1px 2px
+    rgba(255, 255, 255, 0.8);
 
   pointer-events: none;
 }
@@ -381,9 +482,15 @@
     "Times New Roman",
     serif;
 
-  font-size: clamp(10px, 2.8vw, 15px);
+  font-size:
+    clamp(
+      10px,
+      2.8vw,
+      15px
+    );
 
   letter-spacing: 0.18em;
+
   text-transform: uppercase;
 }
 
@@ -394,10 +501,14 @@
 
   align-items: center;
   flex-direction: column;
+
   gap: 2px;
 
   animation:
-    floating 1.8s ease-in-out infinite;
+    floating
+    1.8s
+    ease-in-out
+    infinite;
 }
 
 .scrollMessage p {
@@ -406,66 +517,11 @@
   font-size: 10px;
 
   letter-spacing: 0.13em;
+
   text-transform: uppercase;
 }
 
-/* Botão de som */
-
-.soundButton {
-  position: absolute;
-  z-index: 40;
-
-  top: max(
-    22px,
-    env(safe-area-inset-top)
-  );
-
-  right: max(
-    20px,
-    env(safe-area-inset-right)
-  );
-
-  display: grid;
-
-  width: 42px;
-  height: 42px;
-
-  padding: 0;
-
-  place-items: center;
-
-  color: #5e4d42;
-
-  border:
-    1px solid
-    rgba(100, 76, 60, 0.22);
-
-  border-radius: 50%;
-
-  background:
-    rgba(255, 253, 248, 0.72);
-
-  box-shadow:
-    0 5px 20px
-    rgba(68, 45, 31, 0.08);
-
-  backdrop-filter: blur(12px);
-
-  cursor: pointer;
-
-  transition:
-    transform 180ms ease,
-    background 180ms ease;
-}
-
-.soundButton:hover {
-  transform: scale(1.06);
-
-  background:
-    rgba(255, 253, 248, 0.92);
-}
-
-/* Barra de progresso */
+/* Progresso */
 
 .progress {
   position: absolute;
@@ -481,7 +537,8 @@
 
   border-radius: 999px;
 
-  transform: translateY(-50%);
+  transform:
+    translateY(-50%);
 
   background:
     rgba(91, 68, 51, 0.14);
@@ -497,29 +554,33 @@
 
   background: #852332;
 
-  transform: scaleY(0);
-  transform-origin: top center;
+  transform:
+    scaleY(0);
+
+  transform-origin:
+    top center;
 }
 
 @keyframes floating {
   0%,
   100% {
-    transform: translateY(0);
+    transform:
+      translateY(0);
   }
 
   50% {
-    transform: translateY(6px);
+    transform:
+      translateY(6px);
   }
 }
 
 @media (min-width: 768px) {
   .namesContent {
-    width: min(58vw, 640px);
-  }
-
-  .soundButton {
-    top: 30px;
-    right: 30px;
+    width:
+      min(
+        58vw,
+        640px
+      );
   }
 
   .progress {
@@ -527,13 +588,16 @@
   }
 }
 
-@media (orientation: landscape) and (max-height: 650px) {
+@media (
+  orientation: landscape
+) and (max-height: 650px) {
   .names h1 {
-    font-size: clamp(
-      48px,
-      11vh,
-      80px
-    );
+    font-size:
+      clamp(
+        48px,
+        11vh,
+        80px
+      );
   }
 
   .subtitle {
@@ -555,7 +619,10 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (
+  prefers-reduced-motion:
+  reduce
+) {
   .scrollMessage {
     animation: none;
   }

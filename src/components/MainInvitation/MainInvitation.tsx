@@ -260,28 +260,7 @@ export default function MainInvitation() {
           />
         </button>
 
-        <button
-          className={styles.soundButton}
-          type="button"
-          onClick={toggleVideoSound}
-          aria-label={
-            isMuted
-              ? "Ativar som do vídeo"
-              : "Desativar som do vídeo"
-          }
-        >
-          {isMuted ? (
-            <VolumeX
-              size={18}
-              strokeWidth={1.5}
-            />
-          ) : (
-            <Volume2
-              size={18}
-              strokeWidth={1.5}
-            />
-          )}
-        </button>
+        
       </section>
 
       {/* Contagem regressiva */}
@@ -685,28 +664,7 @@ export default function MainInvitation() {
         </div>
       </footer>
 
-      <button
-        className={styles.floatingSoundButton}
-        type="button"
-        onClick={toggleVideoSound}
-        aria-label={
-          isMuted
-            ? "Ativar som"
-            : "Desativar som"
-        }
-      >
-        {isMuted ? (
-          <VolumeX
-            size={17}
-            strokeWidth={1.5}
-          />
-        ) : (
-          <Volume2
-            size={17}
-            strokeWidth={1.5}
-          />
-        )}
-      </button>
+      
     </div>
   );
 }

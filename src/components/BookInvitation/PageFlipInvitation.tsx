@@ -19,10 +19,6 @@ import HTMLFlipBook from "react-pageflip";
 import { invitationPages } from "./BookInvitation";
 import styles from "./PageFlipInvitation.module.css";
 
-/*
- * A biblioteca exige propriedades internas que
- * são preenchidas pelo próprio react-pageflip.
- */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const FlipBook =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,8 +46,15 @@ const BookPage = forwardRef<
       ref={ref}
       className={`${styles.page} ${className}`}
     >
-      <div className={styles.paperTexture} />
-      <div className={styles.pageBorder} />
+      <div
+        className={styles.paperTexture}
+        aria-hidden="true"
+      />
+
+      <div
+        className={styles.pageBorder}
+        aria-hidden="true"
+      />
 
       <div className={styles.pageBody}>
         {children}
@@ -69,6 +72,12 @@ const BookPage = forwardRef<
 export default function PageFlipInvitation() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const bookRef = useRef<any>(null);
+
+  const openingTimerRef =
+  useRef<number | null>(null);
+
+const turningTimerRef =
+  useRef<number | null>(null);
 
   const [currentPage, setCurrentPage] =
     useState(0);
@@ -97,10 +106,9 @@ export default function PageFlipInvitation() {
     useState(false);
 
   /*
-   * Estrutura:
-   * 0 = capa
-   * 1 até invitationPages.length = conteúdo
-   * última = contracapa
+   * 0 = capa fechada
+   * 1 até invitationPages.length = páginas internas
+   * última página = contracapa
    */
   const totalPages =
     invitationPages.length + 2;
@@ -123,7 +131,7 @@ export default function PageFlipInvitation() {
       "(max-width: 760px)",
     );
 
-    const updateMode = () => {
+    function updateBookSize() {
       const availableHeight =
         window.visualViewport?.height ??
         window.innerHeight;
@@ -141,30 +149,52 @@ export default function PageFlipInvitation() {
           availableHeight,
         ),
       });
-    };
+    }
 
-    updateMode();
+    updateBookSize();
 
     media.addEventListener(
       "change",
-      updateMode,
+      updateBookSize,
     );
 
     window.addEventListener(
       "resize",
-      updateMode,
+      updateBookSize,
+    );
+
+    window.visualViewport?.addEventListener(
+      "resize",
+      updateBookSize,
     );
 
     return () => {
       media.removeEventListener(
         "change",
-        updateMode,
+        updateBookSize,
       );
 
       window.removeEventListener(
         "resize",
-        updateMode,
+        updateBookSize,
       );
+
+      window.visualViewport?.removeEventListener(
+        "resize",
+        updateBookSize,
+      );
+
+      if (openingTimerRef.current) {
+        window.clearTimeout(
+          openingTimerRef.current,
+        );
+      }
+
+      if (turningTimerRef.current) {
+        window.clearTimeout(
+          turningTimerRef.current,
+        );
+      }
     };
   }, []);
 
@@ -180,29 +210,61 @@ export default function PageFlipInvitation() {
     const pageFlip = getPageFlip();
 
     /*
-     * Posiciona o livro diretamente na primeira
-     * página interna enquanto a capa dividida
-     * ainda está escondendo o conteúdo.
+     * Posiciona o livro na primeira página
+     * interna enquanto a capa ainda esconde
+     * o conteúdo.
      */
-    pageFlip?.turnToPage(firstInternalPage);
+    pageFlip?.turnToPage(
+      firstInternalPage,
+    );
 
     setCurrentPage(firstInternalPage);
     setIsOpening(true);
+
+    /*
+     * Segurança para navegadores que não
+     * disparam transitionend corretamente.
+     */
+    openingTimerRef.current =
+      window.setTimeout(() => {
+        setShowOpeningCover(false);
+        setHasStarted(true);
+        setIsOpening(false);
+      }, 1450);
   }
 
   function finishOpening() {
-    if (!isOpening || !showOpeningCover) {
+    if (
+      !isOpening ||
+      !showOpeningCover
+    ) {
       return;
+    }
+
+    if (openingTimerRef.current) {
+      window.clearTimeout(
+        openingTimerRef.current,
+      );
+
+      openingTimerRef.current = null;
     }
 
     setShowOpeningCover(false);
     setHasStarted(true);
+    setIsOpening(false);
   }
 
-  function finishPageTurn() {
-    window.setTimeout(() => {
-      setIsTurning(false);
-    }, 100);
+  function releaseTurning() {
+    if (turningTimerRef.current) {
+      window.clearTimeout(
+        turningTimerRef.current,
+      );
+    }
+
+    turningTimerRef.current =
+      window.setTimeout(() => {
+        setIsTurning(false);
+      }, 120);
   }
 
   function goToNextPage() {
@@ -217,15 +279,15 @@ export default function PageFlipInvitation() {
     }
 
     setIsTurning(true);
-
-    /*
-     * "bottom" faz a animação começar
-     * pelo canto inferior da página.
-     */
     pageFlip.flipNext("bottom");
   }
 
   function goToPreviousPage() {
+    /*
+     * Essa verificação impede que o usuário
+     * volte da primeira página interna
+     * para a capa.
+     */
     if (!canGoPrevious) {
       return;
     }
@@ -239,6 +301,23 @@ export default function PageFlipInvitation() {
     setIsTurning(true);
     pageFlip.flipPrev("bottom");
   }
+
+  /*
+   * Se o FlipBook for remontado ao girar
+   * o celular, ele inicia na página atual
+   * e nunca novamente na capa.
+   */
+  const safeStartPage = hasStarted
+    ? Math.max(
+        firstInternalPage,
+        Math.min(currentPage, lastPage),
+      )
+    : 0;
+
+  const visiblePage =
+    currentPage < firstInternalPage
+      ? firstInternalPage
+      : currentPage;
 
   return (
     <main className={styles.experience}>
@@ -367,21 +446,14 @@ export default function PageFlipInvitation() {
           }
           showCover
           usePortrait={isPortrait}
-          startPage={0}
+          startPage={safeStartPage}
           drawShadow
           flippingTime={1050}
-
-          /*
-           * Desativa totalmente os gestos internos.
-           * Agora as páginas são controladas apenas
-           * pelas dobrinhas personalizadas.
-           */
           useMouseEvents={false}
           mobileScrollSupport
           swipeDistance={9999}
           clickEventForward={false}
           disableFlipByClick
-
           maxShadowOpacity={0.48}
           showPageCorners={false}
           autoSize
@@ -391,9 +463,10 @@ export default function PageFlipInvitation() {
             const nextPage = event.data;
 
             /*
-             * Segurança extra: se a biblioteca tentar
-             * voltar para a capa, retorna imediatamente
-             * para a primeira página interna.
+             * Segurança adicional:
+             * se a biblioteca tentar retornar
+             * para a capa, ela é imediatamente
+             * reposicionada na página 1.
              */
             if (
               hasStarted &&
@@ -408,12 +481,12 @@ export default function PageFlipInvitation() {
                 firstInternalPage,
               );
 
-              finishPageTurn();
+              releaseTurning();
               return;
             }
 
             setCurrentPage(nextPage);
-            finishPageTurn();
+            releaseTurning();
           }}
           className={styles.flipBook}
           style={{}}
@@ -447,7 +520,7 @@ export default function PageFlipInvitation() {
           >
             <div className={styles.finalPage}>
               <Heart
-                size={22}
+                size={24}
                 fill="currentColor"
               />
 
@@ -469,32 +542,37 @@ export default function PageFlipInvitation() {
         </FlipBook>
 
         {hasStarted && (
-          <div
+          <nav
             className={styles.pageNavigation}
-            aria-label="Troca de páginas"
+            aria-label="Navegação entre as páginas"
           >
-            {canGoPrevious && (
-              <button
-                className={`${styles.foldButton} ${styles.foldButtonPrevious}`}
+            <button
+                className={`${styles.foldButton} ${styles.foldButtonPrevious} ${
+                  canGoPrevious
+                    ? ""
+                    : styles.foldButtonPreviousSmall
+                }`}
                 type="button"
+                disabled={!canGoPrevious}
                 onClick={(event) => {
                   event.stopPropagation();
                   goToPreviousPage();
                 }}
                 aria-label="Voltar para a página anterior"
               >
-                <span
-                  className={styles.foldLabel}
-                >
-                  <ChevronLeft
-                    size={15}
-                    strokeWidth={1.7}
-                  />
+                {canGoPrevious && (
+                  <span
+                    className={styles.foldLabel}
+                  >
+                    <ChevronLeft
+                      size={20}
+                      strokeWidth={1.8}
+                    />
 
-                  Voltar
-                </span>
+                    Voltar
+                  </span>
+                )}
               </button>
-            )}
 
             {canGoNext && (
               <button
@@ -512,13 +590,13 @@ export default function PageFlipInvitation() {
                   Próxima
 
                   <ChevronRight
-                    size={15}
-                    strokeWidth={1.7}
+                    size={20}
+                    strokeWidth={1.8}
                   />
                 </span>
               </button>
             )}
-          </div>
+          </nav>
         )}
       </section>
 
@@ -534,7 +612,7 @@ export default function PageFlipInvitation() {
           <span
             style={{
               width: `${
-                ((currentPage -
+                ((visiblePage -
                   firstInternalPage) /
                   Math.max(
                     1,
@@ -548,10 +626,7 @@ export default function PageFlipInvitation() {
         </div>
 
         <p>
-          {Math.max(
-            1,
-            currentPage,
-          )}
+          {visiblePage}
 
           <span>/</span>
 
@@ -559,11 +634,12 @@ export default function PageFlipInvitation() {
         </p>
       </nav>
 
-      {hasStarted && canGoNext && (
-        <p className={styles.gestureTip}>
-          Toque na dobrinha para continuar
-        </p>
-      )}
+      {hasStarted &&
+        canGoNext && (
+          <p className={styles.gestureTip}>
+            Use as dobrinhas para navegar
+          </p>
+        )}
     </main>
   );
 }
