@@ -28,8 +28,8 @@ export default function EnvelopeOpening({
     useRef<HTMLVideoElement>(null);
 
   /*
-   * window.setTimeout retorna number
-   * no navegador.
+   * No navegador, window.setTimeout
+   * retorna um número.
    */
   const finishTimerRef =
     useRef<number | null>(null);
@@ -80,8 +80,8 @@ export default function EnvelopeOpening({
 
     if (video) {
       /*
-       * Garante que o vídeo da abertura
-       * permaneça completamente sem som.
+       * Garante que o vídeo permaneça
+       * completamente sem som.
        */
       video.muted = true;
       video.defaultMuted = true;
@@ -136,8 +136,6 @@ export default function EnvelopeOpening({
       return;
     }
 
-    setPhase("playing");
-
     /*
      * Reinicia o vídeo sempre do começo.
      */
@@ -151,6 +149,8 @@ export default function EnvelopeOpening({
     video.defaultMuted = true;
     video.volume = 0;
 
+    setPhase("playing");
+
     try {
       await video.play();
     } catch (error) {
@@ -161,7 +161,7 @@ export default function EnvelopeOpening({
 
       /*
        * Caso o navegador bloqueie o vídeo,
-       * continua para a tela principal.
+       * continua para a página principal.
        */
       finishOpening();
     }
@@ -174,16 +174,12 @@ export default function EnvelopeOpening({
 
     isFinishingRef.current = true;
 
-    const video = videoRef.current;
-
-    if (video) {
-      video.pause();
-    }
-
     /*
-     * Monta a página principal por baixo
-     * antes de começar o fade.
+     * Não pausamos o vídeo antes do final.
+     * Esta função será chamada pelo evento
+     * onEnded quando ele terminar por completo.
      */
+
     onRevealMain();
 
     setPhase("leaving");
@@ -211,34 +207,6 @@ export default function EnvelopeOpening({
       }, 950);
   }
 
-  function handleVideoTimeUpdate() {
-    const video = videoRef.current;
-
-    if (
-      !video ||
-      !Number.isFinite(video.duration) ||
-      video.duration <= 0 ||
-      isFinishingRef.current
-    ) {
-      return;
-    }
-
-    const remainingTime =
-      video.duration -
-      video.currentTime;
-
-    /*
-     * Inicia a transição um pouco antes
-     * do vídeo chegar ao último frame.
-     */
-    if (
-      remainingTime <= 0.55 &&
-      phase === "playing"
-    ) {
-      finishOpening();
-    }
-  }
-
   function handleVideoReady() {
     const video = videoRef.current;
 
@@ -248,8 +216,8 @@ export default function EnvelopeOpening({
       video.volume = 0;
 
       /*
-       * Mantém o primeiro frame antes
-       * de o usuário clicar.
+       * Mantém o primeiro frame visível
+       * antes de o usuário clicar.
        */
       if (phase === "waiting") {
         video.currentTime = 0;
@@ -257,6 +225,14 @@ export default function EnvelopeOpening({
     }
 
     setVideoReady(true);
+  }
+
+  function handleVideoError() {
+    console.error(
+      "Erro ao carregar o vídeo da abertura.",
+    );
+
+    finishOpening();
   }
 
   return (
@@ -284,17 +260,8 @@ export default function EnvelopeOpening({
         controlsList="nodownload noplaybackrate nofullscreen"
         onCanPlay={handleVideoReady}
         onLoadedData={handleVideoReady}
-        onTimeUpdate={
-          handleVideoTimeUpdate
-        }
         onEnded={finishOpening}
-        onError={() => {
-          console.error(
-            "Erro ao carregar o vídeo da abertura.",
-          );
-
-          finishOpening();
-        }}
+        onError={handleVideoError}
       />
 
       <div
